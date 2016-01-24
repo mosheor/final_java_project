@@ -19,6 +19,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import controller.Properties;
+import model.Model;
+import model.MyModel;
+
 public class MyServer extends BasicWindow {
 
 	int port;
@@ -29,21 +33,25 @@ public class MyServer extends BasicWindow {
 	volatile boolean stop;
 	Thread mainServerThread;
 	int clientsHandled=0;
+	//זמני
+	Model model;
 	
-	public MyServer(int port,ClinetHandler clinetHandler,int numOfClients) {
+	public MyServer(int port,ClinetHandler clinetHandler,int numOfClients,Model model) {
 		super("Server", 300, 500);
 		this.port=port;
 		this.clinetHandler=clinetHandler;
 		this.numOfClients=numOfClients;
+		this.model = model;
+		System.out.println("1");
 	}
 	
 	
 	public void start() throws Exception{
-		run();
 		
 		server=new ServerSocket(port);
 		server.setSoTimeout(10*1000);
 		threadpool=Executors.newFixedThreadPool(numOfClients);
+		System.out.println("3");
 		
 		mainServerThread=new Thread(new Runnable() {			
 			@Override
@@ -51,14 +59,16 @@ public class MyServer extends BasicWindow {
 				while(!stop){
 					try {
 						final Socket someClient=server.accept();
+						System.out.println("4");
 						if(someClient!=null){
 							threadpool.execute(new Runnable() {									
 								@Override
 								public void run() {
-									try{										
+									try{		
+										System.out.println("5");
 										clientsHandled++;
 										System.out.println("\thandling client "+clientsHandled);
-										clinetHandler.handleClient(someClient.getInputStream(), someClient.getOutputStream());
+										clinetHandler.handleClient(someClient.getInputStream(), someClient.getOutputStream(),model);
 										someClient.close();
 										System.out.println("\tdone handling client "+clientsHandled);										
 									}catch(IOException e){
@@ -103,7 +113,7 @@ public class MyServer extends BasicWindow {
 	
 	
 	public static void main(String[] args) throws Exception{
-		System.out.println("Server Side");
+		/*System.out.println("Server Side");
 		System.out.println("type \"close the server\" to stop it");
 		MyServer server=new MyServer(6000,new Maze3dClientHandler(),10);
 		server.start();
@@ -111,8 +121,32 @@ public class MyServer extends BasicWindow {
     	BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
 		
 		while(!(in.readLine()).equals("close the server"));
-			server.close();
+		server.close();
+		*/
+			
+		System.out.println("Server Side");
+		System.out.println("type \"close the server\" to stop it");
 		
+		Properties properties = new Properties();
+		properties.setAlgorithmGenerateName("MyMaze3dGenerator");
+		properties.setAlgorithmSearchName("Astar Air Distance");
+		properties.setMazeName("koko");
+		properties.setNumOfThreads(10);
+		properties.setUserInterface("GUI");
+		properties.setXSize(10);
+		properties.setYSize(10);
+		properties.setZSize(10);
+		
+		MyModel model = new MyModel(properties);
+		MyServer server=new MyServer(6000,new Maze3dClientHandler(),10,model);
+		System.out.println("2");
+		server.start();
+			
+		BufferedReader in=new BufferedReader(new InputStreamReader(System.in));
+			
+		while(!(in.readLine()).equals("close the server"));
+		
+		server.close();	
 	}
 
 
