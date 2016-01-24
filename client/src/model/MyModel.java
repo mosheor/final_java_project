@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,9 +18,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import javax.xml.transform.Templates;
+
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
+import algorithms.search.State;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
 import presenter.Properties;
@@ -32,7 +37,7 @@ import presenter.Properties;
  * @version 1.0
  * @since   17/01/16
  */
-public class MyModel extends Observable implements Model,Observer
+public class MyModel extends CommonModel implements Model
 {
 	
 	private HashMap<String, Maze3d> mazeInFile;
@@ -43,15 +48,14 @@ public class MyModel extends Observable implements Model,Observer
 	private int[][] cross;
 	private int index;
 	private Properties properties;
-	private GenerateMaze generateMazeOb;
-	private SolveMaze solveMazeOb;
 
 	
 	/**
 	 * Constructor - initialize controller
 	 * @param HashMap<String, Command> commands map
 	 */
-	public MyModel(Properties properties) {
+	public MyModel(String ip,int port,Properties properties) {
+		super(ip,port);
 		this.mazeInFile = new HashMap<String, Maze3d>();
 		this.maze3dMap = new HashMap<String, Maze3d>();
 		this.solutionMap = new HashMap<String, Solution<Position>>();
@@ -61,34 +65,11 @@ public class MyModel extends Observable implements Model,Observer
 		loadMaze3dMapZip();
 		this.threadpool = Executors.newFixedThreadPool(properties.getNumOfThreads());
 		
-		generateMaze3d(properties.getXSize(),properties.getYSize(),
-				properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());
-
-		solveMaze(("solve "+properties.getMazeName()+" "+properties.getAlgorithmSearchName()).split(" ")
-				, maze3dMap.get(properties.getMazeName()));
-	}
-	
-	/**
-	 * Comes here after notify event
-	 * @param Observable o
-	 * @param Object arg1
-	 */
-	@Override
-	public void update(Observable o, Object arg1) {
-		if(o==generateMazeOb)
-		{
-			if(arg1.getClass().getName().equals("java.lang.String"))
-			{
-				notifyString((String)arg1);
-			}
-		}
-		if(o==solveMazeOb)
-		{
-			if(arg1.getClass().getName().equals("java.lang.String"))
-			{
-				notifyString((String)arg1);
-			}
-		}
+		outToServer.println("generate 3d maze "+properties.getMazeName()+" "+properties.getXSize()+" "+
+				properties.getYSize()+" "+properties.getZSize()+" "+properties.getAlgorithmGenerateName());
+		outToServer.flush();
+		outToServer.println("solve "+properties.getMazeName()+" "+properties.getAlgorithmSearchName());
+		outToServer.flush();
 	}
 	
 	/**
@@ -105,15 +86,36 @@ public class MyModel extends Observable implements Model,Observer
 			notifyString("Maze "+name+" is alredy exists");
 		else
 		{
-			generateMazeOb = new GenerateMaze();
-			generateMazeOb.addObserver(this);
-			Future<Maze3d> future = threadpool.submit(generateMazeOb.generate(x, y, z, generate, name));
+			outToServer.println("generate 3d maze "+name+" "+x+" "+y+" "+z+" "+generate);
+			outToServer.flush();
 			
+			String line = null;
+			String strReady = "Maze "+name+" is ready";
 			try {
-				setMaze3d(future.get(),name);
-			} catch (InterruptedException | ExecutionException e) {
+				while((line = inFromServer.readLine()).equals(strReady)==false);
+			} catch (IOException e) {
 				notifyString(e.getMessage());
 			}
+			
+			outToServer.println("getMaze");
+			outToServer.flush();
+				
+			int temp;
+			byte[] byteMaze = new byte[x*y*z+9];
+			
+			for (int i = 0; i < byteMaze.length; i++) {
+				try {
+					temp = inFromServer.read();
+					byteMaze[i] = (byte) temp;
+				} catch (IOException e) {
+					notifyString(e.getMessage());
+				}
+			}
+			
+			Maze3d maze = new Maze3d(byteMaze);
+			
+			setMaze3d(maze, name);
+			notifyString(strReady);
 		}
 	}
 	
@@ -285,16 +287,39 @@ public class MyModel extends Observable implements Model,Observer
 			notifyString("Solution for maze "+args[1]+" is alredy exists");
 		else
 		{
-			solveMazeOb = new SolveMaze();
-			solveMazeOb.addObserver(this);
-			Future<Solution<Position>> future = threadpool.submit(solveMazeOb.solve(args, maze));
+			outToServer.println("solve "+args[1]+" "+args[2]);
+			outToServer.flush();
 			
+			String line = null;
+			String strReady = "solution for "+args[2]+" is ready";
 			try {
-				setMazeSol(future.get(), maze);
-				setSolution(future.get(),args[1]);
-			} catch (InterruptedException | ExecutionException e) {
+				while((line = inFromServer.readLine()).equals(strReady)==false);
+			} catch (IOException e) {
 				notifyString(e.getMessage());
-			} 
+			}
+			
+			outToServer.println("getSolution");
+			
+			ArrayList<State<Position>> solArr = new ArrayList<State<Position>>();
+			try {
+				line = inFromServer.readLine();
+				int size = Integer.parseInt(line);
+				
+				for (int i = 0; i < size; i++) {
+					line = inFromServer.readLine();
+					String[] temp = line.split(",");
+					temp[0] = temp[0].substring(1, temp[0].length());
+					temp[2] = temp[2].substring(1, temp[2].length()-1);
+					solArr.add(new State<Position>(new Position(Integer.parseInt(temp[0]),
+							Integer.parseInt(temp[1]),Integer.parseInt(temp[2]))));
+				}
+			} catch (IOException e) {
+				notifyString(e.getMessage());
+			}
+			
+			Solution<Position> solution = new Solution<Position>(solArr);
+			setMazeSol(solution, maze);
+			setSolution(solution, args[2]);
 		}
 	}
 	

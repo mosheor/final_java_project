@@ -1,5 +1,13 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Observable;
+
 import algorithms.mazeGenerators.Maze3d;
 
 /**
@@ -10,8 +18,25 @@ import algorithms.mazeGenerators.Maze3d;
  * @version 1.0
  * @since   17/12/15
  */
-public abstract class CommonModel implements Model {
-
+public abstract class CommonModel extends Observable implements Model {
+	
+	Socket serverSock;
+	PrintWriter outToServer;
+	BufferedReader inFromServer;
+	
+	public CommonModel(String ip,int port)
+	{
+		try {
+			serverSock = new Socket(ip, port);
+			System.out.println("Im ready : local port = "+serverSock.getLocalPort()+"\nport = "+serverSock.getPort());
+			System.out.println("InetADD = "+serverSock.getInetAddress()+"\nLocalAddress = "+serverSock.getLocalAddress());
+			outToServer = new PrintWriter(serverSock.getOutputStream());
+			inFromServer = new BufferedReader(new InputStreamReader(serverSock.getInputStream()));
+		} catch (IOException e) {
+			notifyString(e.getMessage());
+		}
+	}
+	
 	/**
 	 * Creates the maze
 	 * @param int x,int y,int z(size),String type of generation,String maze name
