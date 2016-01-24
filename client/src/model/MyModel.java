@@ -68,8 +68,10 @@ public class MyModel extends CommonModel implements Model
 		generateMaze3d(properties.getXSize(),properties.getYSize(),
 				properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());
 
-		/*solveMaze(("solve "+properties.getMazeName()+" "+properties.getAlgorithmSearchName()).split(" ")
-				, maze3dMap.get(properties.getMazeName()));*/
+		/*System.out.println("hhh");
+		solveMaze(("solve "+properties.getMazeName()+" "+properties.getAlgorithmSearchName()).split(" ")
+				, maze3dMap.get(properties.getMazeName()));
+		System.out.println("kkk");*/
 	}
 	
 	/**
@@ -83,7 +85,9 @@ public class MyModel extends CommonModel implements Model
 	@Override
 	public void generateMaze3d(int x, int y, int z, String generate,String name) {
 		if(maze3dMap.containsKey(name)==true)
+		{
 			notifyString("Maze "+name+" is alredy exists");
+		}
 		else
 		{
 			
@@ -115,7 +119,10 @@ public class MyModel extends CommonModel implements Model
 				}
 			}
 			
+			
 			Maze3d maze = new Maze3d(byteMaze);
+			
+			maze.printMaze();
 			
 			setMaze3d(maze, name);
 			notifyString(strReady);
@@ -290,7 +297,12 @@ public class MyModel extends CommonModel implements Model
 			notifyString("Solution for maze "+args[1]+" is alredy exists");
 		else
 		{
-			outToServer.println("solve "+args[1]+" "+args[2]);
+			String str = "";
+			for (String string : args) {
+				str+=string+" ";
+			}
+			System.out.println(str);
+			outToServer.println(str);
 			outToServer.flush();
 			
 			String line = null;
@@ -456,6 +468,7 @@ public class MyModel extends CommonModel implements Model
 	public String[] getNamesMaze3d()
 	{
 		HashMap<String, Maze3d> temp = this.maze3dMap;
+		System.out.println(maze3dMap.toString());
 		String s=temp.toString();
 		String[] t = s.split(", ");
 		String[] k=null;

@@ -13,6 +13,7 @@ import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import algorithms.search.State;
 import model.Model;
+import model.MyModel;
 
 public class Maze3dClientHandler implements ClinetHandler{
 
@@ -24,7 +25,7 @@ public class Maze3dClientHandler implements ClinetHandler{
 	}
 	
 	@Override
-	public void handleClient(InputStream inFromClient, OutputStream outToClient) {
+	public void handleClient(InputStream inFromClient, OutputStream outToClient, Model model) {
 		try{
 			BufferedReader in=new BufferedReader(new InputStreamReader(inFromClient));
 			PrintWriter out=new PrintWriter(outToClient);
