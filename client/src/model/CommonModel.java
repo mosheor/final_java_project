@@ -28,11 +28,12 @@ public abstract class CommonModel extends Observable implements Model {
 	{
 		try {
 			serverSock = new Socket(ip, port);
+			System.out.println("Sock ok");
 			System.out.println("Im ready : local port = "+serverSock.getLocalPort()+"\nport = "+serverSock.getPort());
 			System.out.println("InetADD = "+serverSock.getInetAddress()+"\nLocalAddress = "+serverSock.getLocalAddress());
 			outToServer = new PrintWriter(serverSock.getOutputStream());
 			inFromServer = new BufferedReader(new InputStreamReader(serverSock.getInputStream()));
-		} catch (IOException e) {
+		} catch (IOException e ) {
 			notifyString(e.getMessage());
 		}
 	}

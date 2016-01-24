@@ -65,11 +65,11 @@ public class MyModel extends CommonModel implements Model
 		loadMaze3dMapZip();
 		this.threadpool = Executors.newFixedThreadPool(properties.getNumOfThreads());
 		
-		outToServer.println("generate 3d maze "+properties.getMazeName()+" "+properties.getXSize()+" "+
-				properties.getYSize()+" "+properties.getZSize()+" "+properties.getAlgorithmGenerateName());
-		outToServer.flush();
-		outToServer.println("solve "+properties.getMazeName()+" "+properties.getAlgorithmSearchName());
-		outToServer.flush();
+		generateMaze3d(properties.getXSize(),properties.getYSize(),
+				properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());
+
+		/*solveMaze(("solve "+properties.getMazeName()+" "+properties.getAlgorithmSearchName()).split(" ")
+				, maze3dMap.get(properties.getMazeName()));*/
 	}
 	
 	/**
@@ -86,6 +86,9 @@ public class MyModel extends CommonModel implements Model
 			notifyString("Maze "+name+" is alredy exists");
 		else
 		{
+			
+			System.out.println(serverSock.getLocalSocketAddress());
+			
 			outToServer.println("generate 3d maze "+name+" "+x+" "+y+" "+z+" "+generate);
 			outToServer.flush();
 			
