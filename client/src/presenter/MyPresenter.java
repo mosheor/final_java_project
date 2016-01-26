@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+
+import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
 import model.Model;
 import view.View;
 
@@ -214,7 +217,10 @@ public class MyPresenter implements Presenter,Observer{
 					{
 						if(model.checkMazeHash(args[2]) == true)
 						{
-							view.displaySolution(model.getSolution(args[2]),args[2]);
+							Solution<Position> sol = model.getSolution(args[2]);
+							System.out.println("sol is empty = "+sol.getSol().isEmpty());
+							if(sol.getSol().isEmpty()==false)
+								view.displaySolution(sol,args[2]);
 						}
 						else
 							view.displayString("Solution for maze " + args[2] + " is not exist!");

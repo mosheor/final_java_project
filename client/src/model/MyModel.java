@@ -207,8 +207,10 @@ public class MyModel extends CommonModel implements Model
 			try {
 				while((line = (String)inFromServer.readLine()).equals(strReady)==false && 
 						(line).equals(strAlready)==false);
+				notifyString(strAlready);
+				System.out.println(strReady);
 			} catch (IOException e) {
-				notifyString(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 	}
@@ -332,13 +334,15 @@ public class MyModel extends CommonModel implements Model
 		
 		try {
 			int size = (int)inFromServer.read();
+			System.out.println("sol size = "+size);
 			ArrayList<State<Position>> sol = new ArrayList<State<Position>>();
 			for (int i = 0; i < size; i++) {
 				String s = inFromServer.readLine();
-				System.out.println(s);
+				System.out.println("position = "+s);
 				String[] str = s.split(",");
 				str[0] = str[0].substring(1, str[0].length());
 				str[2] = str[2].substring(0, str[2].length()-1);
+				System.out.println("("+str[0]+","+str[1]+","+str[2]+")");
 				Position p = new Position(Integer.parseInt(str[0]), Integer.parseInt(str[1]), Integer.parseInt(str[2]));
 				sol.add(new State<Position>(p));
 			}
