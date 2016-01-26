@@ -23,6 +23,11 @@ public class SolveMaze extends Observable {
 		Callable<Solution<Position>> call = new Callable<Solution<Position>>() {
 			@Override
 			public Solution<Position> call() {
+				int i=0;
+				for (String string : args) {
+					System.out.println(i+" = "+string);
+					i++;
+				}
 				Searchable<Position> s = new Maze3dDomain(maze);
 				BFS<Position> solve = null;
 				Solution<Position> sol = null;
@@ -32,9 +37,7 @@ public class SolveMaze extends Observable {
 					{
 						solve = new BFS<Position>(new StateCostComparator<Position>());
 						ArrayList<State<Position>> arr = solve.search(s).getSol();
-						System.out.println("arr is empty = "+arr.isEmpty());
 						sol = new Solution<Position>(arr);
-						System.out.println("sol is empty = "+sol.getSol().isEmpty());
 						notifyS("solution for " +args[1]+ " is ready");
 					}
 					else

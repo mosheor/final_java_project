@@ -108,17 +108,11 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 					}
 					else if(args[1].equals("solution")==true)
 					{
-						System.out.println("display sol");
 						Solution<Position> sol = getSolution(args[2]);
 						ArrayList<State<Position>> arrSol = sol.getSol();
-						System.out.println("arrSol is empty = "+arrSol.isEmpty());
-						for (State<Position> state : arrSol) {
-							System.out.println(state);
-						}
 						out.write(arrSol.size());
 						out.flush();
 						for (State<Position> b : arrSol) {
-							System.out.println(b.toString());
 							out.println(b.getState().toString());
 							out.flush();
 						}
@@ -206,7 +200,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 				setMaze3d(future.get(),name);
 				return ("Maze "+name+" is ready");
 			} catch (InterruptedException | ExecutionException e) {
-				System.out.println(e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		return null;
@@ -245,7 +239,6 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 
 
 	public Solution<Position> getSolution(String name) {
-		System.out.println();
 		return solutionMap.get(name);
 	}
 	public Maze3d getMaze3d(String name)
@@ -253,22 +246,38 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		return maze3dMap.get(name);
 	}
 	public String solveMaze(String[] args, Maze3d maze) {
-		if(mazeSolMap.containsKey(maze)==true)
-			return ("Solution for maze "+args[1]+" is alredy exists");
+		String[] str = args[args.length-1].split(",");
+		str[0] = str[0].substring(1, str[0].length());
+		str[2] = str[2].substring(0, str[2].length()-1);
+		Position p = new Position(Integer.parseInt(str[0]), Integer.parseInt(str[1]), Integer.parseInt(str[2]));
+		if(mazeSolMap.containsKey(maze)==true && maze.getStartPosition().equals(p)==true)
+			{System.out.println("sol is exist in map");return ("Solution for maze "+args[1]+" is alredy exists");}
 		else
 		{
 			solveMazeOb = new SolveMaze();
 			solveMazeOb.addObserver(this);
-			Future<Solution<Position>> future = threadpool.submit(solveMazeOb.solve(args, maze));
+			Position start = null;
+			if(args[args.length-2].equals("changeStartPos")==true)
+			{
+				start = new Position(maze.getStartPosition().getpX(), maze.getStartPosition().getpY(), maze.getStartPosition().getpZ());
+				System.out.println("reg start = "+start.toString()+"\nnew start = "+p.toString());
+				maze.setStartPosition(p);
+			}
+			String str1 = "";
+			for(int i=0;i<args.length-2;i++) {
+				str1+=args[i]+" ";
+			}
+			Future<Solution<Position>> future = threadpool.submit(solveMazeOb.solve(str1.split(" "), maze));
 			
+			if(args[3].equals("startPos")==true)
+				{System.out.println("reg start = "+start.toString()+"\nnew start = "+
+						maze.getStartPosition().toString());maze.setStartPosition(start);}
 			
 			try {
-				System.out.println("future is empty = "+future.get().getSol().isEmpty());
 				setMazeSol(future.get(), maze);
 				setSolution(future.get(),args[1]);
 				return ("Solution for maze "+args[1]+" is ready");
 			} catch (InterruptedException | ExecutionException e) {
-				//System.out.println(e.getMessage());
 				e.printStackTrace();
 			} 
 		}
@@ -278,14 +287,12 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		if(solutionMap.containsKey(name)==false)
 		{
 			solutionMap.put(name, solution);
-			System.out.println("contain sol = "+solutionMap.containsKey(name));
 		}
 		else
 		{
 			if(solutionMap.containsValue(solution)==false)
 			{
 				solutionMap.replace(name, solution);
-				System.out.println("replace sol");
 			}
 		}
 	}

@@ -746,6 +746,7 @@ public class MainWindow extends BasicWindow implements View{
 					setCommand(("solve "+nameCurrentMaze+" "+solveAlg).split(" "));
 					maze.setStartPosition(temp);
 					setCommand(("display solution "+nameCurrentMaze).split(" "));
+					System.out.println("sol is ok");
 					timer=new Timer();
 					task=new TimerTask() {
 						@Override
