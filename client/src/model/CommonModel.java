@@ -3,11 +3,13 @@ package model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Observable;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 
 import algorithms.mazeGenerators.Maze3d;
 
@@ -29,11 +31,21 @@ public abstract class CommonModel extends Observable implements Model {
 	{
 		try {
 			serverSock = new Socket(ip, port);
-			System.out.println("Sock ok");
-			System.out.println("Im ready : local port = "+serverSock.getLocalPort()+"\nport = "+serverSock.getPort());
-			System.out.println("InetADD = "+serverSock.getInetAddress()+"\nLocalAddress = "+serverSock.getLocalAddress());
-			outToServer = new PrintWriter(serverSock.getOutputStream());
-			inFromServer = new BufferedReader(new InputStreamReader(serverSock.getInputStream()));
+			System.out.println("my common model");
+			System.out.println("is connected = "+serverSock.isConnected());
+			System.out.println("is closed = "+serverSock.isClosed());
+			if (serverSock.isConnected()==false) {
+				System.out.println("close");
+				exit();
+			}
+			else
+			{
+				System.out.println("Sock ok");
+				System.out.println("Im ready : local port = "+serverSock.getLocalPort()+"\nport = "+serverSock.getPort());
+				System.out.println("InetADD = "+serverSock.getInetAddress()+"\nLocalAddress = "+serverSock.getLocalAddress());
+				outToServer = new PrintWriter(serverSock.getOutputStream());
+				inFromServer = new BufferedReader(new InputStreamReader(serverSock.getInputStream()));
+			}
 		} catch (IOException e ) {
 			notifyString(e.getMessage());
 		}

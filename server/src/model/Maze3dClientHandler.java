@@ -246,6 +246,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		return maze3dMap.get(name);
 	}
 	public String solveMaze(String[] args, Maze3d maze) {
+		System.out.println("pos = "+args[args.length-1]);
 		String[] str = args[args.length-1].split(",");
 		str[0] = str[0].substring(1, str[0].length());
 		str[2] = str[2].substring(0, str[2].length()-1);
@@ -378,7 +379,8 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 	{
 		if(maze3dMap.containsKey(name)==true)
 		{
-			solveMaze(("solve "+name+" "+getAlgorithmSearchName).split(" "),maze3dMap.get(name));
+			solveMaze(("solve "+name+" "+getAlgorithmSearchName+" changeStartPos "+
+					maze3dMap.get(name).getStartPosition().toString()).split(" "),maze3dMap.get(name));
 			return solutionMap.get(name).getSol().size();
 		}
 		else

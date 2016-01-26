@@ -47,16 +47,23 @@ public class MyModel extends CommonModel implements Model
 	 */
 	public MyModel(String ip,int port,Properties properties) {
 		super(ip,port);
-		this.mazeInFile = new HashMap<String, Maze3d>();
-		this.maze3dMap = new HashMap<String, Maze3d>();
-		this.solutionMap = new HashMap<String, Solution<Position>>();
-		this.mazeSolMap = new HashMap<Maze3d, Solution<Position>>();
-		this.properties = properties;
-		this.cross = null;
-		this.threadpool = Executors.newFixedThreadPool(properties.getNumOfThreads());
-		
-		generateMaze3d(properties.getXSize(),properties.getYSize(),
-				properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());
+		System.out.println("my model");
+		/*System.out.println("is connected = "+serverSock.isConnected());
+		System.out.println("is closed = "+serverSock.isClosed());*/
+		if (serverSock != null)
+		{
+			this.mazeInFile = new HashMap<String, Maze3d>();
+			this.maze3dMap = new HashMap<String, Maze3d>();
+			this.solutionMap = new HashMap<String, Solution<Position>>();
+			this.mazeSolMap = new HashMap<Maze3d, Solution<Position>>();
+			this.properties = properties;
+			this.cross = null;
+			this.threadpool = Executors.newFixedThreadPool(properties.getNumOfThreads());
+			generateMaze3d(properties.getXSize(),properties.getYSize(),
+					properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());	
+		}
+		else
+			notifyString("Exit");
 	}
 	
 	/**
@@ -218,7 +225,7 @@ public class MyModel extends CommonModel implements Model
 	 */
 	@Override
 	public void exit() {
-		outToServer.println("exit client");
+		outToServer.println("exit");
 		outToServer.flush();
 		threadpool.shutdown();
 		try {
@@ -227,7 +234,18 @@ public class MyModel extends CommonModel implements Model
 			this.setChanged();
 			notifyString(e.getMessage());
 		}
-		notifyString("Exit");
+		System.out.println("is connected = "+serverSock.isConnected());
+		System.out.println("is closed = "+serverSock.isClosed());
+		try {
+			if (serverSock.isClosed()==false) {
+				serverSock.close();
+			System.out.println("is connected = "+serverSock.isConnected());
+			System.out.println("is closed = "+serverSock.isClosed());
+			notifyString("Exit");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -276,7 +294,9 @@ public class MyModel extends CommonModel implements Model
 	@Override
 	public int getNumOfStepToGoal(String name)
 	{
-		outToServer.println("hint "+name+" "+properties.getAlgorithmSearchName());
+		outToServer.println("hint "+name+" "+properties.getAlgorithmSearchName()+
+				" changeStartPos "+maze3dMap.get(name).getStartPosition().toString());
+		outToServer.flush();
 		outToServer.flush();
 		int numOfSteps;
 		

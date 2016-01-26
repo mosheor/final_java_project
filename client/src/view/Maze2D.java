@@ -23,6 +23,7 @@ public class Maze2D<T> extends MazeDisplayer<Position>{
 	private Solution<Position> sol;
 	private Image solutionImage;
 	private Image winImage;
+	private Image wallImage;
 	private String section;
 	
 	/**
@@ -34,7 +35,7 @@ public class Maze2D<T> extends MazeDisplayer<Position>{
 	 * @param Image solution
 	 * @param Image win
 	 */
-	public Maze2D(Composite parent, int style,Image goalI,Image characterI,Image solution,Image win){
+	public Maze2D(Composite parent, int style,Image goalI,Image characterI,Image solution,Image win, Image wall){
 		super(parent, style);
 		
 		setBackground(new Color(null, 255, 255, 255));
@@ -43,6 +44,7 @@ public class Maze2D<T> extends MazeDisplayer<Position>{
 		this.character = new MazeCharacter<Position>(characterI);
 		this.solutionImage = solution;
 		this.winImage = win;
+		this.wallImage = wall;
 	}
 	
 	/**
@@ -86,11 +88,13 @@ public class Maze2D<T> extends MazeDisplayer<Position>{
 			 	
 			 	for(int i=0;i<mazeData.length;i++)
 			 	{
+			 		
 			 		for(int j=0;j<mazeData[i].length;j++){
 			 			int x=j*w;
 				        int y=i*h;
 				        if(mazeData[i][j]!=0)
-				            e.gc.fillRectangle(x,y,w,h);
+			        		e.gc.drawImage(wallImage,0,0,wallImage.getBounds().width,wallImage.getBounds().height,x,y,w,h);
+
 				        else
 				        {
 				        	if(section.equals("x")==true)

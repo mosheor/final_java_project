@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Observable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since   24/01/16
  */
-public class MyServer {
+public class MyServer extends Observable{
 
 	int port;
 	ServerSocket server;
@@ -26,6 +28,7 @@ public class MyServer {
 	volatile boolean stop;
 	Thread mainServerThread;
 	int clientsHandled=0;
+	private ConcurrentHashMap<Integer, String> clients;
 	
 	/**
 	 * Default C'tor
@@ -37,6 +40,7 @@ public class MyServer {
 		this.port=port;
 		this.clinetHandler=clinetHandler;
 		this.numOfClients=numOfClients;
+		this.clients = new ConcurrentHashMap<Integer, String>();
 	}
 	
 	/**
@@ -62,9 +66,12 @@ public class MyServer {
 									try{
 										clientsHandled++;
 										System.out.println("\thandling client "+clientsHandled);
+										notifyString(addClient(someClient));
 										clinetHandler.handleClient(someClient.getInputStream(), someClient.getOutputStream());
 										someClient.close();
-										System.out.println("\tdone handling client "+clientsHandled);										
+										System.out.println("\tdone handling client "+clientsHandled);
+										notifyString(removeClient(someClient));
+										
 									}catch(IOException e){
 										e.printStackTrace();
 									}									
@@ -85,6 +92,26 @@ public class MyServer {
 		
 		mainServerThread.start();
 		
+	}
+	
+	public void notifyString(String str)
+	{
+		System.out.println("MyServer notify = "+str);
+		setChanged();
+		notifyObservers(str);
+	}
+	
+	public String addClient(Socket client){
+		clients.put(client.getPort(), client.getLocalAddress().getHostAddress());
+		System.out.println("client succed = "+clients.containsKey(client.getPort()));
+		return ""+client.getLocalAddress().getHostAddress()+":"+client.getPort()+" has connected";
+	}
+	
+	public String removeClient(Socket client){
+		if(!clients.remove(client.getPort(), client.getLocalAddress().getHostAddress()))
+			return "Error";
+		else
+			return ""+client.getLocalAddress().getHostAddress()+":"+client.getPort()+" has disconnected";
 	}
 	
 	/**

@@ -1,15 +1,17 @@
 package model;
 
 import java.util.Observable;
+import java.util.Observer;
 
 import Presenter.Properties;
 
-public class ServerModel extends Observable{
+public class ServerModel extends Observable implements Observer{
 	
 	private MyServer server;
 	
 	public ServerModel(Properties properties) {
 		server = new MyServer(properties.getPort(), properties.getClinetHandler(), properties.getNumOfClients());
+		server.addObserver(this);
 	}
 
 	public void StartServer()
@@ -18,7 +20,7 @@ public class ServerModel extends Observable{
 			server.start();
 			notifyString("Server is connected");
 		} catch (Exception e) {
-			notifyString(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -36,5 +38,17 @@ public class ServerModel extends Observable{
 	{
 		setChanged();
 		notifyObservers(str);
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if(o==server)
+		{
+			if(arg!=null && arg.getClass().getName().equals("java.lang.String")==true)
+			{
+				System.out.println("ServerModel update = "+(String)arg);
+				notifyString((String)arg);
+			}
+		}
 	}
 }

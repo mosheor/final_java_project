@@ -144,8 +144,9 @@ public class MainWindow extends BasicWindow implements View{
 		
 		//MazeDisplayer
 		//mazeDisplayer = new Maze2D(shell, SWT.BORDER);
-		mazeDisplayer = new Maze2D<Position>(shell, SWT.BORDER,new Image(display, "resources/goalPos.jpg"),
-				new Image(display, "resources/piratesIm.jpg"),new Image(display, "resources/coin.jpg"),new Image(display, "resources/Treasure.jpg"));
+		mazeDisplayer = new Maze2D<Position>(shell, SWT.BORDER,new Image(display, "resources/goalPos1.jpg"),
+				new Image(display, "resources/piratesIm.jpg"),new Image(display, "resources/coin.jpg"),
+				new Image(display, "resources/Treasure.jpg"), new Image(display, "resources/wall.png"));
 		mazeDisplayer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
 		mazeDisplayer.draw(null);
 		

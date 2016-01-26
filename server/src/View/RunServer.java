@@ -21,6 +21,5 @@ public class RunServer {
 		model.addObserver(presenter);
 		
 		view.start();
-	}
-	
+	}	
 }

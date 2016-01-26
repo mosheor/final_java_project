@@ -2,13 +2,14 @@ package view;
 
 import model.MyModel;
 import presenter.MyPresenter;
+import presenter.Properties;
 
 public class Run {
 	
 	private static final int PORT = 6000;
 	
 	public static void main(String[] args) {
-		presenter.Properties pr = new presenter.Properties();
+		Properties pr = new Properties();
 		pr.setAlgorithmGenerateName("MyMaze3dGenerator");
 		pr.setAlgorithmSearchName("BFS");
 		pr.setNumOfThreads(10);
