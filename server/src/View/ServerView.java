@@ -68,11 +68,6 @@ public class ServerView extends BasicWindow{
 			}
 		});
 	}
-	
-	private String[] getClient() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/**
 	 * Runnable's start

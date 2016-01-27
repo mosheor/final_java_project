@@ -144,7 +144,7 @@ public class MainWindow extends BasicWindow implements View{
 		
 		//MazeDisplayer
 		//mazeDisplayer = new Maze2D(shell, SWT.BORDER);
-		mazeDisplayer = new Maze2D<Position>(shell, SWT.BORDER,new Image(display, "resources/goalPos1.jpg"),
+		mazeDisplayer = new Maze2D<Position>(shell, SWT.BORDER,new Image(display, "resources/goalPos.jpg"),
 				new Image(display, "resources/piratesIm.jpg"),new Image(display, "resources/coin.jpg"),
 				new Image(display, "resources/Treasure.jpg"), new Image(display, "resources/wall.png"));
 		mazeDisplayer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
@@ -683,52 +683,54 @@ public class MainWindow extends BasicWindow implements View{
 					
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				shell.setEnabled(false);
-				Shell chooseShell = new Shell();
-				chooseShell.setSize(350, 250);
-				chooseShell.setLayout(new GridLayout(1,true));
-				chooseShell.setText("Choose maze3d");
-				new Label(chooseShell, SWT.None).setText("Choose maze3d to be displayed:");
-						
-				setCommand("mazeName".split(" "));
-				String[] mazes = getMazes();
-						
-						
-				List list = new List(chooseShell, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);    
-				list.setItems(mazes);    
-				list.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-				
-				Button displayMazeButton = new Button(chooseShell, SWT.PUSH);
-				displayMazeButton.setText("Dispaly maze");
-				displayMazeButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
-				
-				displayMazeButton.addSelectionListener(new SelectionListener() {
+				if(MainWindow.this.mazes!=null)
+				{
+					shell.setEnabled(false);
+					Shell chooseShell = new Shell();
+					chooseShell.setSize(350, 250);
+					chooseShell.setLayout(new GridLayout(1,true));
+					chooseShell.setText("Choose maze3d");
+					new Label(chooseShell, SWT.None).setText("Choose maze3d to be displayed:");
+							
+					setCommand("mazeName".split(" "));
+					String[] mazes = getMazes();
+							
+							
+					List list = new List(chooseShell, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);    
+					list.setItems(mazes);
+					list.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 					
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						shell.setEnabled(true);
-						section = "y";
-						mazeDisplayer.setSol(null);
-						mazeDisplayer.setFinish(false);
-						nameCurrentMaze = mazes[list.getFocusIndex()];
-						setCommand(("display " + nameCurrentMaze).split(" "));
-						possibleMoves(b);
-						chooseShell.close();
-					}
+					Button displayMazeButtonInShell = new Button(chooseShell, SWT.PUSH);
+					displayMazeButtonInShell.setText("Dispaly maze");
+					displayMazeButtonInShell.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false, 1, 1));
 					
-					@Override
-					public void widgetDefaultSelected(SelectionEvent arg0) {}
-				});
+					displayMazeButtonInShell.addSelectionListener(new SelectionListener() {
+						
+						@Override
+						public void widgetSelected(SelectionEvent arg0) {
+							shell.setEnabled(true);
+							section = "y";
+							mazeDisplayer.setSol(null);
+							mazeDisplayer.setFinish(false);
+							nameCurrentMaze = mazes[list.getFocusIndex()];
+							setCommand(("display " + nameCurrentMaze).split(" "));
+							possibleMoves(b);
+							chooseShell.close();
+						}
+						
+						@Override
+						public void widgetDefaultSelected(SelectionEvent arg0) {}
+					});
+					chooseShell.open();
 				
-				chooseShell.open();
-				
-				//exit
-				chooseShell.addListener(SWT.Close, new Listener() {
-			       	  @Override
-				      public void handleEvent(Event event) {
-				    		shell.setEnabled(true);
-				      }
-				 });
+					//exit
+					chooseShell.addListener(SWT.Close, new Listener() {
+				       	  @Override
+					      public void handleEvent(Event event) {
+					    		shell.setEnabled(true);
+					      }
+					 });
+				}
 			}
 			
 			@Override
@@ -968,13 +970,15 @@ public class MainWindow extends BasicWindow implements View{
 				
 				@Override
 				public void run() {
-					//System.out.println(s);
-					if(s.equals("Exit")==false && s.contains("solution")==false && s.contains("Solution")==false)
+					System.out.println(s);
+					if(s.equals("The server is closed")==false && s.equals("Exit because the server is null")==false && s.equals("Exit")==false && s.contains("solution")==false && s.contains("Solution")==false)
 					{
 						MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION| SWT.YES);
 						messageBox.setMessage(s);
 						messageBox.open();
 					}
+					if(s.equals("Exit because the server is null")==true)
+						shell.close();
 				}
 			});
 		}

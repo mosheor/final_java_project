@@ -45,41 +45,38 @@ public class MyPresenter implements Presenter,Observer{
 	public void update(Observable o, Object arg) {
 		if(o==view)
 		{
-			if(arg==null)
+			if(arg==null && model.getServerSock()!=null)
 			{
-				String[] args = view.getArgs();
-				boolean dos = false;
-				String s = null;
-				for(int i=0;i<args.length;i++)
+				if(model.getServerSock().isClosed()==false)
 				{
-					if(commandsMap.containsKey(s)== true && dos == false)
+					String[] args = view.getArgs();
+					boolean dos = false;
+					String s = null;
+					for(int i=0;i<args.length;i++)
 					{
-						dos = true;
-					}
-					else
-					{
-						if(dos==false)
+						if(commandsMap.containsKey(s)== true && dos == false)
+							dos = true;
+						else
 						{
-							if(s==null)
-								s = args[i];
-							else if(s!=null)
-								s = s + " " +args[i];
+							if(dos==false)
+							{
+								if(s==null)
+									s = args[i];
+								else if(s!=null)
+									s = s + " " +args[i];
+							}
 						}
 					}
-				}
-				if(commandsMap.containsKey(s)==true)
-				{
-					commandsMap.get(s).doCommand(args);
-				}
-				else
-				{
-					view.displayString("Error");
-				}
-			} 
-			else if(arg.getClass().getName().equals("presenter.Properties")==true)
-			{
-				model.setProperties((Properties)arg);
+					if(commandsMap.containsKey(s)==true)
+						commandsMap.get(s).doCommand(args);
+					else
+						view.displayString("Error");
+				} 
+				else if(arg.getClass().getName().equals("presenter.Properties")==true)
+					model.setProperties((Properties)arg);
 			}
+			else
+				view.displayString("The server is closed");
 		}
 		if(o==model)
 		{

@@ -97,5 +97,9 @@ public abstract class CommonModel extends Observable implements Model {
 	 * Close all program
 	 */
 	public abstract void exit();
+	
+	public Socket getServerSock() {
+		return serverSock;
+	}
 
 }

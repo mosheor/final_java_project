@@ -103,15 +103,17 @@ public class MyServer extends Observable{
 	
 	public String addClient(Socket client){
 		clients.put(client.getPort(), client.getLocalAddress().getHostAddress());
+		System.out.println("add client: port = "+port+" , host = "+client.getLocalAddress().getHostAddress());
 		System.out.println("client succed = "+clients.containsKey(client.getPort()));
 		return ""+client.getLocalAddress().getHostAddress()+":"+client.getPort()+" has connected";
 	}
 	
 	public String removeClient(Socket client){
-		if(!clients.remove(client.getPort(), client.getLocalAddress().getHostAddress()))
-			return "Error";
+		String hostAddr = null;
+		if((hostAddr=clients.remove(client.getPort()))==null)
+			return "Error with remove client";
 		else
-			return ""+client.getLocalAddress().getHostAddress()+":"+client.getPort()+" has disconnected";
+			return ""+hostAddr+":"+client.getPort()+" has disconnected";
 	}
 	
 	/**

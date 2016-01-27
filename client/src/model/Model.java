@@ -1,5 +1,7 @@
 package model;
 
+import java.net.Socket;
+
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
@@ -185,5 +187,7 @@ public interface Model {
 	 * @return Properties
 	 */
 	public Properties getProperties();	
+	
+	public Socket getServerSock();
 }
 

@@ -47,9 +47,6 @@ public class MyModel extends CommonModel implements Model
 	 */
 	public MyModel(String ip,int port,Properties properties) {
 		super(ip,port);
-		System.out.println("my model");
-		/*System.out.println("is connected = "+serverSock.isConnected());
-		System.out.println("is closed = "+serverSock.isClosed());*/
 		if (serverSock != null)
 		{
 			this.mazeInFile = new HashMap<String, Maze3d>();
@@ -63,7 +60,7 @@ public class MyModel extends CommonModel implements Model
 					properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());	
 		}
 		else
-			notifyString("Exit");
+			notifyString("Exit because the server is null");
 	}
 	
 	/**
@@ -234,13 +231,13 @@ public class MyModel extends CommonModel implements Model
 			this.setChanged();
 			notifyString(e.getMessage());
 		}
-		System.out.println("is connected = "+serverSock.isConnected());
-		System.out.println("is closed = "+serverSock.isClosed());
+		/*System.out.println("is connected = "+serverSock.isConnected());
+		System.out.println("is closed = "+serverSock.isClosed());*/
 		try {
 			if (serverSock.isClosed()==false) {
 				serverSock.close();
-			System.out.println("is connected = "+serverSock.isConnected());
-			System.out.println("is closed = "+serverSock.isClosed());
+			/*System.out.println("is connected = "+serverSock.isConnected());
+			System.out.println("is closed = "+serverSock.isClosed());*/
 			notifyString("Exit");
 			}
 		} catch (IOException e) {

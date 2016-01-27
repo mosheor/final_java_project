@@ -15,7 +15,7 @@ public class RunServer {
 		properties.setPort(6000);
 		
 		ServerModel model = new ServerModel(properties);
-		ServerView view = new ServerView("server", 300, 300);
+		ServerView view = new ServerView("server", 500, 500);
 		Presenter presenter = new Presenter(model, view);
 		view.addObserver(presenter);
 		model.addObserver(presenter);
