@@ -60,6 +60,7 @@ public class MainWindow extends BasicWindow implements View{
 	private Group arrowsGroup;
 	private String solveAlg;
 	private String section;
+	private volatile boolean solving = false;
 	
 	/**
 	 * C'tor
@@ -441,7 +442,6 @@ public class MainWindow extends BasicWindow implements View{
 		});
 		
 		aboutItem.addSelectionListener(new SelectionListener() {
-			////////////////////////////////////////TODO \n???////////////////////////////////////////////////////
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				MessageBox mb = new MessageBox(shell , SWT.ICON_INFORMATION | SWT.YES);
@@ -465,7 +465,7 @@ public class MainWindow extends BasicWindow implements View{
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false)
+				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false && solving==false)
 				{
 					mazeDisplayer.moveUp(section);
 					possibleMoves(b);
@@ -480,7 +480,7 @@ public class MainWindow extends BasicWindow implements View{
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false)
+				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false && solving==false)
 				{
 					movePageUp();
 					possibleMoves(b);
@@ -495,7 +495,7 @@ public class MainWindow extends BasicWindow implements View{
 				
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false)
+				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false && solving==false)
 				{
 					mazeDisplayer.moveLeft(section);
 					possibleMoves(b);
@@ -510,7 +510,7 @@ public class MainWindow extends BasicWindow implements View{
 		
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false)
+				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false && solving==false)
 				{
 					mazeDisplayer.moveRight(section);					
 					possibleMoves(b);
@@ -525,7 +525,7 @@ public class MainWindow extends BasicWindow implements View{
 				
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false)
+				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false && solving==false)
 				{
 					mazeDisplayer.moveDown(section);
 					possibleMoves(b);
@@ -540,7 +540,7 @@ public class MainWindow extends BasicWindow implements View{
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false)
+				if(mazeDisplayer.getMazeData()!=null && mazeDisplayer.isFinish()==false && solving==false)
 				{
 					movePageDown();
 					possibleMoves(b);
@@ -692,6 +692,7 @@ public class MainWindow extends BasicWindow implements View{
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				
+				solving = false;
 				setCommand("mazeName".split(" "));
 				String[] mazes = getMazes();
 				if(MainWindow.this.mazes!=null)
@@ -757,6 +758,7 @@ public class MainWindow extends BasicWindow implements View{
 					maze.setStartPosition(temp);
 					setCommand(("display solution "+nameCurrentMaze).split(" "));
 					System.out.println("sol is ok");
+					solving = true;
 					timer=new Timer();
 					task=new TimerTask() {
 						@Override
@@ -832,25 +834,28 @@ public class MainWindow extends BasicWindow implements View{
 			
 			@Override
 			public void keyPressed(KeyEvent arg0) {
-				if(mazeDisplayer.isFinish()==false)
+				if(!solving)
 				{
-					switch(arg0.keyCode)
+					if(mazeDisplayer.isFinish()==false)
 					{
-					case SWT.ARROW_UP: mazeDisplayer.moveUp(section);
-							break;
-					case SWT.ARROW_DOWN: mazeDisplayer.moveDown(section);
-							break;
-					case SWT.ARROW_LEFT: mazeDisplayer.moveLeft(section);
-							break;
-					case SWT.ARROW_RIGHT: mazeDisplayer.moveRight(section);
-							break;
-					case SWT.PAGE_UP: movePageUp();
-							break;
-					case SWT.PAGE_DOWN: movePageDown();
-							break;
+						switch(arg0.keyCode)
+						{
+						case SWT.ARROW_UP: mazeDisplayer.moveUp(section);
+								break;
+						case SWT.ARROW_DOWN: mazeDisplayer.moveDown(section);
+								break;
+						case SWT.ARROW_LEFT: mazeDisplayer.moveLeft(section);
+								break;
+						case SWT.ARROW_RIGHT: mazeDisplayer.moveRight(section);
+								break;
+						case SWT.PAGE_UP: movePageUp();
+								break;
+						case SWT.PAGE_DOWN: movePageDown();
+								break;
+						}
 					}
+					possibleMoves(b);
 				}
-				possibleMoves(b);
 			}
 		});
 		
@@ -1102,7 +1107,6 @@ public class MainWindow extends BasicWindow implements View{
 	public void possibleMoves(Button[] b)
 	{
 		String[] possibleMoves = null;
-		
 		if(mazeDisplayer.getMazeData()!=null)
 		{
 			possibleMoves = mazeDisplayer.possibleMoves(section);

@@ -32,8 +32,6 @@ public class MyModel extends CommonModel implements Model
 	
 	private HashMap<String, Maze3d> mazeInFile;
 	private HashMap<String, Maze3d> maze3dMap;
-	private HashMap<String,Solution<Position>> solutionMap;
-	private HashMap<Maze3d, Solution<Position>> mazeSolMap;
 	private ExecutorService threadpool;
 	private int[][] cross;
 	private int index;
@@ -51,13 +49,12 @@ public class MyModel extends CommonModel implements Model
 		{
 			this.mazeInFile = new HashMap<String, Maze3d>();
 			this.maze3dMap = new HashMap<String, Maze3d>();
-			this.solutionMap = new HashMap<String, Solution<Position>>();
-			this.mazeSolMap = new HashMap<Maze3d, Solution<Position>>();
 			this.properties = properties;
 			this.cross = null;
 			this.threadpool = Executors.newFixedThreadPool(properties.getNumOfThreads());
 			generateMaze3d(properties.getXSize(),properties.getYSize(),
 					properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());
+			loadMaze3dMapZip();
 		}
 		else
 			notifyString("Exit because the server is null");
@@ -193,27 +190,22 @@ public class MyModel extends CommonModel implements Model
 	 */
 	@Override
 	public void solveMaze(String[] args, Maze3d maze) {
-		if(mazeSolMap.containsKey(maze)==true)
-			notifyString("Solution for maze "+args[1]+" is alredy exists");
-		else
-		{
-			String str = "";
-			for (String string : args) {
-				str+=string+" ";
-			}
-			outToServer.println(str+"changeStartPos "+maze.getStartPosition().toString());
-			outToServer.flush();
-			
-			String line = null;
-			String strReady = "Solution for maze "+args[1]+" is ready";
-			String strAlready = "Solution for maze "+args[1]+" is alredy exists";
-			try {
-				while((line = inFromServer.readLine()).equals(strReady)==false && 
-						(line).equals(strAlready)==false);
-				notifyString(strAlready);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		String str = "";
+		for (String string : args) {
+			str+=string+" ";
+		}
+		outToServer.println(str+"changeStartPos "+maze.getStartPosition().toString());
+		outToServer.flush();
+		
+		String line = null;
+		String strReady = "Solution for maze "+args[1]+" is ready";
+		String strAlready = "Solution for maze "+args[1]+" is alredy exists";
+		try {
+			while((line = inFromServer.readLine()).equals(strReady)==false && 
+					(line).equals(strAlready)==false);
+			notifyString(strAlready);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -231,13 +223,9 @@ public class MyModel extends CommonModel implements Model
 			this.setChanged();
 			notifyString(e.getMessage());
 		}
-		/*System.out.println("is connected = "+serverSock.isConnected());
-		System.out.println("is closed = "+serverSock.isClosed());*/
 		try {
 			if (serverSock.isClosed()==false) {
 				serverSock.close();
-			/*System.out.println("is connected = "+serverSock.isConnected());
-			System.out.println("is closed = "+serverSock.isClosed());*/
 			notifyString("Exit");
 			}
 		} catch (IOException e) {
@@ -490,31 +478,38 @@ public class MyModel extends CommonModel implements Model
 	}
 
 	/**
-	 * Save the maze HashMao to .zip file
-	 */
-	@Override
-	public void saveMaze3dMapZip() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/**
 	 * Load the maze HashMao from .zip file
 	 */
 	@Override
 	public void loadMaze3dMapZip() {
-		// TODO Auto-generated method stub
+		String[] mazesNames = getNamesMaze3d();
+		for (String string : mazesNames) {
+			outToServer.println("getMaze "+string);
+			outToServer.flush();
+			String line = null;
+			try {
+				while((line=inFromServer.readLine())==null);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			if(line.equals(string+" is not exist")==false)
+			{
+				String[] temp = line.split(",");
+				byte[] byteArr = new byte[9+Integer.parseInt(temp[0])*Integer.parseInt(temp[1])*Integer.parseInt(temp[2])];
+				
+				try {
+					for (int i = 0; i < byteArr.length; i++) {
+						byteArr[i] = (byte)inFromServer.read();
+					}
+				} catch (IOException e) {
+					notifyString(e.getMessage());
+				}
+				
+				Maze3d maze = new Maze3d(byteArr);
+				setMaze3d(maze, string);
+			}
+		}
 		
-	}
-	/**
-	 * Check if the solution for a specific maze is alredy exists
-	 * @param String name
-	 * @return boolen
-	 */
-	@Override
-	public boolean checkSolutionHash(String name) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 	
 	

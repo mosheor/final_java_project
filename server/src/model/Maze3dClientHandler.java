@@ -152,6 +152,21 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 					out.write((int)o);
 					out.flush();
 					break;
+				case "getMaze":
+					System.out.println(args[1]);
+					byte[] byteArrMaze = (getMaze3d(args[1])).toByteArray();
+					if(byteArrMaze==null)
+						out.println(args[1]+" is not exist");
+					else
+					{
+						out.println(getMaze3d(args[1]).getXSize()+","+getMaze3d(args[1]).getYSize()+
+								","+getMaze3d(args[1]).getZSize());
+						for (byte b : byteArrMaze) {
+							out.write((int)b);
+							out.flush();
+						}
+					}
+					break;
 				default:
 					break;
 				}

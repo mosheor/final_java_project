@@ -145,18 +145,6 @@ public interface Model {
 	 * @return Solution<Position>
 	 */
 	public Solution<Position> getSolution(String name);
-
-	/**
-	 * Check if the solution for a specific maze is already exist
-	 * @param String name
-	 * @return boolean
-	 */
-	public boolean checkSolutionHash(String name);
-	
-	/**
-	 * Save the Maze3d hashmap to .zip file
-	 */
-	public void saveMaze3dMapZip();
 	
 	/**
 	 * Loads the Maze3d hashmap from .zip file
