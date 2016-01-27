@@ -22,6 +22,7 @@ public class Properties implements Serializable {
 	private String algorithmGenerateName;
 	private String userInterface;
 	private String mazeName;
+	private int serverPort;
 	
 	/**
 	 * Default C'tor
@@ -30,6 +31,7 @@ public class Properties implements Serializable {
 		this.xSize=0;
 		this.ySize=0;
 		this.zSize=0;
+		this.serverPort = 0;
 		this.algorithmSearchName=null;
 		this.numOfThreads=0;
 		this.algorithmGenerateName=null;
@@ -168,6 +170,70 @@ public class Properties implements Serializable {
 	 */
 	public void setMazeName(String mazeName) {
 		this.mazeName = mazeName;
+	}
+
+	/**
+	 * Get the x size property
+	 * @param String
+	 */
+	public int getxSize() {
+		return xSize;
+	}
+	
+	/**
+	 * Set the x size property
+	 * @param String
+	 */
+	public void setxSize(int xSize) {
+		this.xSize = xSize;
+	}
+
+	/**
+	 * Get the y size property
+	 * @param String
+	 */
+	public int getySize() {
+		return ySize;
+	}
+
+	/**
+	 * Set the y size property
+	 * @param String
+	 */
+	public void setySize(int ySize) {
+		this.ySize = ySize;
+	}
+
+	/**
+	 * Get the z size property
+	 * @param String
+	 */
+	public int getzSize() {
+		return zSize;
+	}
+
+	/**
+	 * Set the z size property
+	 * @param String
+	 */
+	public void setzSize(int zSize) {
+		this.zSize = zSize;
+	}
+
+	/**
+	 * Get the server port property
+	 * @param String
+	 */
+	public int getServerPort() {
+		return serverPort;
+	}
+
+	/**
+	 * Set the server port property
+	 * @param String
+	 */
+	public void setServerPort(int serverPort) {
+		this.serverPort = serverPort;
 	}
 	
 }

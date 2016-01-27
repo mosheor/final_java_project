@@ -6,7 +6,6 @@ import presenter.Properties;
 
 public class Run {
 	
-	private static final int PORT = 6000;
 	
 	public static void main(String[] args) {
 		Properties pr = new Properties();
@@ -14,11 +13,13 @@ public class Run {
 		pr.setAlgorithmSearchName("BFS");
 		pr.setNumOfThreads(10);
 		pr.setXSize(15);
-		pr.setYSize(1);
+		pr.setYSize(15);
 		pr.setZSize(15);
 		pr.setUserInterface("GUI");
 		pr.setMazeName("mainMaze");
-		MyModel m = new MyModel("localhost",PORT,pr);
+		pr.setServerPort(6000);
+		
+		MyModel m = new MyModel("localhost",pr);
 		MainWindow v=new MainWindow("Menu", 1000, 700);
 		MyPresenter p = new MyPresenter(m,v);
 		

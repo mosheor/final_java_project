@@ -135,7 +135,7 @@ public class Maze2D<T> extends MazeDisplayer<Position>{
 				        		{
 				        			if(j==goalPosition.getCharacter().getpX()&&i==goalPosition.getCharacter().getpZ())
 						        	{
-						        		e.gc.drawImage(goalPosition.getImage(),0,0,solutionImage.getBounds().width,solutionImage.getBounds().height,x,y,w,h);
+						        		e.gc.drawImage(goalPosition.getImage(),0,0,goalPosition.getImage().getBounds().width,goalPosition.getImage().getBounds().height,x,y,w,h);
 						        	}
 				        		}
 				        		if(j==character.getCharacter().getpX()&&i==character.getCharacter().getpZ())

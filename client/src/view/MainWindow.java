@@ -14,6 +14,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -38,7 +39,6 @@ import algorithms.search.State;
 import model.MyModel;
 import presenter.MyPresenter;
 import presenter.Properties;
-
 
 /**
  * <h1>  class MainWindow <h1>
@@ -78,6 +78,8 @@ public class MainWindow extends BasicWindow implements View{
 	void initWidgets() {
 		
 		shell.setLayout(new GridLayout(2,false));
+		shell.setBackground(new Color(display, 100, 200, 225));
+		shell.setImage(new Image(display, "resources/logo.jpg"));
 		
 		Menu menuBar, fileInMenuBar, gameInMenuBar, helpInMenuBar;
 		MenuItem fileMenuHeader, gameMenuHeader, helpMenuHeader, 
@@ -131,7 +133,8 @@ public class MainWindow extends BasicWindow implements View{
 		Group buttonsGroup = new Group(shell, SWT.NONE);
 		buttonsGroup.setText("Options:");
 		buttonsGroup.setLayout(new GridLayout(1, true));
-		
+		buttonsGroup.setBackground(new Color(display, 100, 200, 225));
+
 		//generate maze button
 		Button generateButton=new Button(buttonsGroup, SWT.PUSH);
 		generateButton.setText("Generate maze3d");
@@ -169,23 +172,28 @@ public class MainWindow extends BasicWindow implements View{
 		Group sectionGroup = new Group(shell, SWT.SHADOW_OUT);
 		sectionGroup.setText("Choose section:");
 		sectionGroup.setLayout(new GridLayout(1, true));
-		
+		sectionGroup.setBackground(new Color(display, 100, 200, 225));
+
 		//Sections radio buttons
 		Button sectionXButton=new Button(sectionGroup, SWT.RADIO | SWT.SELECTED);
 		sectionXButton.setText("Section by X");
 		sectionXButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		sectionXButton.setBackground(new Color(display, 100, 200, 225));
 		Button sectionYButton=new Button(sectionGroup, SWT.RADIO | SWT.SELECTED);
 		sectionYButton.setText("Section by Y");
 		sectionYButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		sectionYButton.setBackground(new Color(display, 100, 200, 225));
 		Button sectionZButton=new Button(sectionGroup, SWT.RADIO | SWT.SELECTED);
 		sectionZButton.setText("Section by Z");
 		sectionZButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
-		
+		sectionZButton.setBackground(new Color(display, 100, 200, 225));
+
 		//arrows group
 		arrowsGroup = new Group(shell, SWT.NONE);
 		arrowsGroup.setText("Posible moves:");
 		arrowsGroup.setLayout(new GridLayout(3, false));
-		
+		arrowsGroup.setBackground(new Color(display, 100, 200, 225));
+
 		Button[] b = new Button[6];
 		
 		b[0] = new Button(arrowsGroup, SWT.NONE);
@@ -629,11 +637,11 @@ public class MainWindow extends BasicWindow implements View{
 								t3.getText().equals("")==false && t4.getText().equals("")==false && combo1.getText().equals("")==false)
 						{
 							String temp = "";
-							if(isInt(t2.getText())==false)
+							if(isInt(t2.getText())==false && Integer.parseInt(t2.getText())<=1)
 								temp = "Wrong X parameter\n";
-							if(isInt(t3.getText())==false)
+							if(isInt(t3.getText())==false && Integer.parseInt(t3.getText())<=1)
 								temp += "Wrong Y parameter\n";
-							if(isInt(t4.getText())==false)
+							if(isInt(t4.getText())==false && Integer.parseInt(t4.getText())<=1)
 								temp += "Wrong Z parameter\n";
 							if(temp.equals(""))
 							{
@@ -683,6 +691,9 @@ public class MainWindow extends BasicWindow implements View{
 					
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				
+				setCommand("mazeName".split(" "));
+				String[] mazes = getMazes();
 				if(MainWindow.this.mazes!=null)
 				{
 					shell.setEnabled(false);
@@ -691,10 +702,6 @@ public class MainWindow extends BasicWindow implements View{
 					chooseShell.setLayout(new GridLayout(1,true));
 					chooseShell.setText("Choose maze3d");
 					new Label(chooseShell, SWT.None).setText("Choose maze3d to be displayed:");
-							
-					setCommand("mazeName".split(" "));
-					String[] mazes = getMazes();
-							
 							
 					List list = new List(chooseShell, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);    
 					list.setItems(mazes);

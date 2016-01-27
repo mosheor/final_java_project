@@ -45,8 +45,8 @@ public class MyModel extends CommonModel implements Model
 	 * Constructor - initialize controller
 	 * @param HashMap<String, Command> commands map
 	 */
-	public MyModel(String ip,int port,Properties properties) {
-		super(ip,port);
+	public MyModel(String ip,Properties properties) {
+		super(ip,properties.getServerPort());
 		if (serverSock != null)
 		{
 			this.mazeInFile = new HashMap<String, Maze3d>();
@@ -57,7 +57,7 @@ public class MyModel extends CommonModel implements Model
 			this.cross = null;
 			this.threadpool = Executors.newFixedThreadPool(properties.getNumOfThreads());
 			generateMaze3d(properties.getXSize(),properties.getYSize(),
-					properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());	
+					properties.getZSize(),properties.getAlgorithmGenerateName(),properties.getMazeName());
 		}
 		else
 			notifyString("Exit because the server is null");
