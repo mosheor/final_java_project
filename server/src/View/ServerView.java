@@ -3,6 +3,8 @@ package View;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -24,7 +26,7 @@ public class ServerView extends BasicWindow{
 	void initWidgets() {
 		
 		shell.setLayout(new GridLayout(2, true));
-
+		shell.setBackground(new Color(display, 100, 200, 225));
 		Button startButton = new  Button(shell, SWT.PUSH);
 		startButton.setText("Start");
 		startButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -33,8 +35,16 @@ public class ServerView extends BasicWindow{
 		stopButton.setText("Stop");
 		stopButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
-		new Label(shell, SWT.None).setText("Connected clients: ");
+		Label l = new Label(shell, SWT.None);
+		l.setText("Connected clients: ");
+		l.setFont(new Font(display, "Calibri", 0, 7));
+		l.setBackground(new Color(display, 100, 200, 225));
 		
+		Label status = new Label(shell,SWT.NONE);
+		status.setText("Server is off                      ");
+		status.setFont(new Font(display, "Calibri", 0, 7));
+		status.setForeground(new Color(display, 255, 0, 0));
+		status.setBackground(new Color(display, 100, 200, 225));
 		list = new List(shell, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);    
 		list.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		
@@ -43,6 +53,8 @@ public class ServerView extends BasicWindow{
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				notifyString("StartServer");
+				status.setText("Server is on");
+				status.setForeground(new Color(display, 255, 255, 0));
 			}
 			
 			@Override
@@ -53,7 +65,12 @@ public class ServerView extends BasicWindow{
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				
+				status.setForeground(new Color(display, 0, 0, 255));
+				status.setText("Server is turning off...");
 				notifyString("StopServer");
+				status.setText("Server is off");
+				status.setForeground(new Color(display, 255, 0, 0));
 			}
 			
 			@Override

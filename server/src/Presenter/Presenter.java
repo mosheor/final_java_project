@@ -60,7 +60,7 @@ public class Presenter implements Observer{
 		{
 			if(arg!=null && arg.getClass().getName().equals("java.lang.String")==true)
 			{
-				System.out.println("presenter update = "+(String)arg);
+				//System.out.println("presenter update = "+(String)arg);
 				if (((String)arg).contains("has")) {
 					view.displayClient((String)arg);
 				}

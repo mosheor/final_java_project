@@ -48,7 +48,7 @@ public class MyServer extends Observable{
 	 * @throws Exception
 	 */
 	public void start() throws Exception{
-		
+		stop = false;
 		server=new ServerSocket(port);
 		server.setSoTimeout(10*1000);
 		threadpool=Executors.newFixedThreadPool(numOfClients);
@@ -121,18 +121,26 @@ public class MyServer extends Observable{
 	 * @throws Exception
 	 */
 	public void close() throws Exception{
-		stop=true;	
-		// do not execute jobs in queue, continue to execute running threads
-		System.out.println("shutting down");
-		threadpool.shutdownNow();
-		// wait 10 seconds over and over again until all running jobs have finished
-		boolean allTasksCompleted=false;
-		while(!(allTasksCompleted=threadpool.awaitTermination(10, TimeUnit.SECONDS)));
-		System.out.println("all the tasks have finished");
-		mainServerThread.join();	
-		System.out.println("main server thread is done");
-		server.close();
-		System.out.println("server is safely closed");
+		if(stop==false)
+		{
+			stop=true;	
+			// do not execute jobs in queue, continue to execute running threads
+			System.out.println("shutting down");
+			threadpool.shutdownNow();
+			// wait 10 seconds over and over again until all running jobs have finished
+			boolean allTasksCompleted=false;
+			while(!(allTasksCompleted=threadpool.awaitTermination(10, TimeUnit.SECONDS)));
+			System.out.println("all the tasks have finished");
+			mainServerThread.join();	
+			System.out.println("main server thread is done");
+			server.close();
+			System.out.println("server is safely closed");
+		}
+		else
+		{
+			server.close();
+			System.out.println("server is safely closed");
+		}
 	}
 }
 

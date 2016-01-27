@@ -154,11 +154,9 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 					break;
 				default:
 					break;
-				case "exit":
-					exit();
-					break;
 				}
 			}
+			exit();
 			in.close();
 			out.close();
 		}catch(IOException e){
@@ -312,16 +310,20 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		ObjectOutputStream obj = null;
 		try {
 			obj = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("mazeMap.zip")));
+			System.out.println("exit hand");
 			obj.writeObject(maze3dMap);
 			obj.flush();
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.out.println(e.getMessage());
 		} finally {
 			try {
 				obj.close();
 			} catch (IOException e) {
+				e.printStackTrace();
 				System.out.println(e.getMessage());
 			}
 		}		
