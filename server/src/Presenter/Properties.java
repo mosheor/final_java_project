@@ -12,13 +12,14 @@ import model.ClinetHandler;
  * @version 1.0
  * @since   18/01/16
  */
+@SuppressWarnings("serial")
 public class Properties implements Serializable {
 
 	//all the properties
-	private static final long serialVersionUID = 1L;
+	//private static final long serialVersionUID = 1L;
 	private int numOfClients;
 	private int port;
-	private ClinetHandler clinetHandler;
+	private String clinetHandler;
 	
 	/**
 	 * Default C'tor
@@ -45,17 +46,12 @@ public class Properties implements Serializable {
 		this.port = port;
 	}
 
-	public ClinetHandler getClinetHandler() {
+	public String getClinetHandler() {
 		return clinetHandler;
 	}
 
-	public void setClinetHandler(ClinetHandler clinetHandler) {
+	public void setClinetHandler(String clinetHandler) {
 		this.clinetHandler = clinetHandler;
-	}
-
-	//for canceling the error
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 	
 }

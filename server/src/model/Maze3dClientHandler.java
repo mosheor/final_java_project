@@ -70,7 +70,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 			PrintWriter out = new PrintWriter(outToClient);
 			String line;
 			Object o = null;
-			while(!(line=in.readLine()).equals("exit") && run==true){
+			while(!(line=in.readLine()).equals("exit") && run){
 				System.out.println("line = "+line);
 				String[] args = line.split(" ");
 				
@@ -173,11 +173,12 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 					break;
 				}
 			}
-			exit();
 			in.close();
 			out.close();
+			exit();
 		}catch(IOException e){
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			exit();
 		}
 	}
 	

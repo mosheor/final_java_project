@@ -1,5 +1,5 @@
 package View;
-import Presenter.Presenter;
+import Presenter.MyPresenter;
 import Presenter.Properties;
 import model.Maze3dClientHandler;
 import model.ServerModel;
@@ -10,16 +10,19 @@ public class RunServer {
 		System.out.println("Server Side");
 		
 		Properties properties = new Properties();
-		properties.setClinetHandler(new Maze3dClientHandler());
+		properties.setClinetHandler("Maze3dClientHandler");
 		properties.setNumOfClients(10);
 		properties.setPort(6000);
 		
-		ServerModel model = new ServerModel(properties);
-		ServerView view = new ServerView("server", 500, 500);
-		Presenter presenter = new Presenter(model, view);
-		view.addObserver(presenter);
-		model.addObserver(presenter);
+		if(properties.getClinetHandler().equals("Maze3dClientHandler")==true)
+		{
+			ServerModel model = new ServerModel(properties,new Maze3dClientHandler());
+			ServerView view = new ServerView("server", 500, 500);
+			MyPresenter presenter = new MyPresenter(model, view);
+			view.addObserver(presenter);
+			model.addObserver(presenter);
 		
-		view.start();
+			view.start();
+		}
 	}	
 }

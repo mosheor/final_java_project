@@ -7,6 +7,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -16,7 +17,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 
-public class ServerView extends BasicWindow{
+public class ServerView extends BasicWindow implements View{
 	
 	List list;
 	
@@ -29,6 +30,7 @@ public class ServerView extends BasicWindow{
 		
 		shell.setLayout(new GridLayout(2, true));
 		shell.setBackground(new Color(display, 100, 200, 225));
+		shell.setImage(new Image(display, "resources/serverLogo.png"));
 		Button startButton = new  Button(shell, SWT.PUSH);
 		startButton.setText("Start");
 		startButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -129,7 +131,7 @@ public class ServerView extends BasicWindow{
 		
 		int port = Integer.parseInt(args[1].split(" ")[0]);
 		String hostname = args[0];
-		System.out.println(str);
+		System.out.println("str = "+str);
 		
 		display.asyncExec(new Runnable() {
 			
@@ -144,7 +146,6 @@ public class ServerView extends BasicWindow{
 				else
 				{
 					list.remove("client: " + hostname + " connected from port: " + port);
-					System.out.println("rmv cli");
 					list.add("client: " + hostname + " disconnected from port: " + port);
 					list.redraw();
 				}

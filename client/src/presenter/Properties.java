@@ -10,10 +10,10 @@ import java.io.Serializable;
  * @version 1.0
  * @since   18/01/16
  */
+@SuppressWarnings("serial")
 public class Properties implements Serializable {
 
 	//all the properties
-	private static final long serialVersionUID = 1L;
 	private int xSize;
 	private int ySize;
 	private int zSize;
@@ -37,11 +37,6 @@ public class Properties implements Serializable {
 		this.algorithmGenerateName=null;
 		this.userInterface=null;
 		this.mazeName = null;
-	}
-
-	//for canceling the error
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 	
 	/**

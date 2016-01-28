@@ -217,9 +217,11 @@ public class MyPresenter implements Presenter,Observer{
 						if(model.checkMazeHash(args[2]) == true)
 						{
 							Solution<Position> sol = model.getSolution(args[2]);
-							//System.out.println("sol is empty = "+sol.getSol().isEmpty());
-							if(sol.getSol().isEmpty()==false)
-								view.displaySolution(sol,args[2]);
+							if(sol!=null)
+							{
+								if(sol.getSol().isEmpty()==false)
+									view.displaySolution(sol,args[2]);
+							}
 						}
 						else
 							view.displayString("Solution for maze " + args[2] + " is not exist!");

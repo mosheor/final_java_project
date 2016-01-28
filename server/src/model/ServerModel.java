@@ -5,13 +5,16 @@ import java.util.Observer;
 
 import Presenter.Properties;
 
-public class ServerModel extends Observable implements Observer{
+public class ServerModel extends Observable implements Observer,Model{
 	
 	private MyServer server;
 	
-	public ServerModel(Properties properties) {
-		server = new MyServer(properties.getPort(), properties.getClinetHandler(), properties.getNumOfClients());
-		server.addObserver(this);
+	public ServerModel(Properties properties,ClinetHandler cl) {
+		if(properties.getClinetHandler().equals("Maze3dClientHandler")==true)
+		{
+			server = new MyServer(properties.getPort(), cl, properties.getNumOfClients());
+			server.addObserver(this);
+		}
 	}
 
 	public void StartServer()

@@ -77,6 +77,7 @@ public class MyServer extends Observable{
 										clientSockets.put(someClient.getPort(), someClient);
 										clinetHandler.handleClient(someClient.getInputStream(), someClient.getOutputStream());
 										clientSockets.remove(someClient.getPort());
+										System.out.println("close sock start");
 										someClient.close();
 										System.out.println("\tdone handling client "+clientsHandled);
 										notifyString(removeClient(someClient));
@@ -105,7 +106,7 @@ public class MyServer extends Observable{
 	
 	public void notifyString(String str)
 	{
-		System.out.println("MyServer notify = "+str);
+		//System.out.println("MyServer notify = "+str);
 		setChanged();
 		notifyObservers(str);
 	}
@@ -155,20 +156,20 @@ public class MyServer extends Observable{
 	
 	public void removeClientFromSockets(Integer port,String hostAddr)
 	{
-		Socket s =clientSockets.get(port);
+		Socket socket =clientSockets.get(port);
 		clientSockets.remove(port);
-		System.out.println("port = "+port+","+s.getPort());
-		System.out.println("addr = "+hostAddr+","+s.getInetAddress().getHostAddress().toString());
+		System.out.println("port = "+port+","+socket.getPort());
+		System.out.println("addr = "+hostAddr+","+socket.getInetAddress().getHostAddress().toString());
 		try {
-			/*PrintWriter p = new PrintWriter(s.getOutputStream());
-			p.println("exit");
-			p.flush();*/
-			s.close();
+			if(socket!=null)
+			{
+				socket.close();
+				System.out.println("close sock");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("clientSokets contain "+port+" = "+clientSockets.containsKey(port));
-		notifyString(""+hostAddr+":"+port+" has disconnected");
+		//notifyString(""+hostAddr+":"+port+" has disconnected");
 	}
 }
 

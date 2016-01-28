@@ -205,7 +205,7 @@ public class MyModel extends CommonModel implements Model
 					(line).equals(strAlready)==false);
 			notifyString(strAlready);
 		} catch (IOException e) {
-			e.printStackTrace();
+			notifyString(e.getMessage());
 		}
 	}
 	
@@ -229,8 +229,7 @@ public class MyModel extends CommonModel implements Model
 			notifyString("Exit");
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			notifyString(e.getMessage());		}
 	}
 
 	/**
@@ -489,9 +488,8 @@ public class MyModel extends CommonModel implements Model
 			String line = null;
 			try {
 				while((line=inFromServer.readLine())==null);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			} catch (IOException e) {
+				notifyString(e.getMessage());			}
 			if(line.equals(string+" is not exist")==false)
 			{
 				String[] temp = line.split(",");

@@ -12,6 +12,8 @@ import java.util.TimerTask;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -866,6 +868,27 @@ public class MainWindow extends BasicWindow implements View{
 			}
 		});
 		
+		mazeDisplayer.addMouseWheelListener(new MouseWheelListener() { 
+			@Override
+			public void mouseScrolled(MouseEvent arg0) {
+				if((arg0.stateMask & SWT.CONTROL) == SWT.CONTROL)
+				{
+					if(arg0.count > 0){
+						int width = mazeDisplayer.getSize().x; 
+						int height = mazeDisplayer.getSize().y; 
+						mazeDisplayer.setSize((int)(width * 1.05), (int)(height * 1.05));
+					} 
+				}
+				else
+				{
+					int width = mazeDisplayer.getSize().x; 
+					int height = mazeDisplayer.getSize().y; 
+					mazeDisplayer.setSize((int)(width * 0.95), (int)(height * 0.95)); 
+				}
+			}
+			});
+
+		
 		//exit
 		shell.addListener(SWT.Close, new Listener() {
 	       	  @Override
@@ -1230,49 +1253,53 @@ public class MainWindow extends BasicWindow implements View{
 	 * @param Solution<.Position.> sol
 	 */
 	private void Walk(Solution<Position> sol){
-		if(sol.getSol().size()>0)
-		{
-			//y
-			int w1 = sol.getSol().get(0).getState().getpX();
-			int f1 = sol.getSol().get(0).getState().getpY();
-			int h1 = sol.getSol().get(0).getState().getpZ();
-			int w2 = ((Position)mazeDisplayer.getCharacter()).getpX();
-			int f2 = ((Position)mazeDisplayer.getCharacter()).getpY();
-			int h2 = ((Position)mazeDisplayer.getCharacter()).getpZ();
-			
-			if(section.equals("x")==true)
+		if(sol!=null){
+			if(sol.getSol().size()>0)
 			{
-				f1 = sol.getSol().get(0).getState().getpX();
-				h1 = sol.getSol().get(0).getState().getpY();
-				w1 = sol.getSol().get(0).getState().getpZ();
-				w2 = ((Position)mazeDisplayer.getCharacter()).getpZ();
-				f2 = ((Position)mazeDisplayer.getCharacter()).getpX();
-				h2 = ((Position)mazeDisplayer.getCharacter()).getpY();
+				//y
+				int w1 = sol.getSol().get(0).getState().getpX();
+				int f1 = sol.getSol().get(0).getState().getpY();
+				int h1 = sol.getSol().get(0).getState().getpZ();
+				int w2 = ((Position)mazeDisplayer.getCharacter()).getpX();
+				int f2 = ((Position)mazeDisplayer.getCharacter()).getpY();
+				int h2 = ((Position)mazeDisplayer.getCharacter()).getpZ();
+				
+				if(section.equals("x")==true)
+				{
+					f1 = sol.getSol().get(0).getState().getpX();
+					h1 = sol.getSol().get(0).getState().getpY();
+					w1 = sol.getSol().get(0).getState().getpZ();
+					w2 = ((Position)mazeDisplayer.getCharacter()).getpZ();
+					f2 = ((Position)mazeDisplayer.getCharacter()).getpX();
+					h2 = ((Position)mazeDisplayer.getCharacter()).getpY();
+				}
+				else if(section.equals("z")==true)
+				{
+					w1 = sol.getSol().get(0).getState().getpX();
+					h1 = sol.getSol().get(0).getState().getpY();
+					f1 = sol.getSol().get(0).getState().getpZ();
+					w2 = ((Position)mazeDisplayer.getCharacter()).getpX();
+					f2 = ((Position)mazeDisplayer.getCharacter()).getpZ();
+					h2 = ((Position)mazeDisplayer.getCharacter()).getpY();
+				}
+				
+				if(w2>w1)
+					mazeDisplayer.moveLeft(this.section);
+				else if(w2<w1)
+					mazeDisplayer.moveRight(this.section);
+				else if(h2>h1)
+					mazeDisplayer.moveUp(this.section);
+				else if(h2<h1)
+					mazeDisplayer.moveDown(this.section);
+				else if(f2>f1)
+					movePageDown();
+				else if(f2<f1)
+					movePageUp();
+				
+				sol.getSol().remove(0);
 			}
-			else if(section.equals("z")==true)
-			{
-				w1 = sol.getSol().get(0).getState().getpX();
-				h1 = sol.getSol().get(0).getState().getpY();
-				f1 = sol.getSol().get(0).getState().getpZ();
-				w2 = ((Position)mazeDisplayer.getCharacter()).getpX();
-				f2 = ((Position)mazeDisplayer.getCharacter()).getpZ();
-				h2 = ((Position)mazeDisplayer.getCharacter()).getpY();
-			}
-			
-			if(w2>w1)
-				mazeDisplayer.moveLeft(this.section);
-			else if(w2<w1)
-				mazeDisplayer.moveRight(this.section);
-			else if(h2>h1)
-				mazeDisplayer.moveUp(this.section);
-			else if(h2<h1)
-				mazeDisplayer.moveDown(this.section);
-			else if(f2>f1)
-				movePageDown();
-			else if(f2<f1)
-				movePageUp();
-			
-			sol.getSol().remove(0);
+			else
+				timer.cancel();
 		}
 		else
 			timer.cancel();
