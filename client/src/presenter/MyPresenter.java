@@ -47,6 +47,8 @@ public class MyPresenter implements Presenter,Observer{
 		{
 			if(arg==null && model.getServerSock()!=null)
 			{
+				System.out.println("close = "+model.getServerSock().isClosed());
+				System.out.println("connect = "+model.getServerSock().isConnected());
 				if(model.getServerSock().isClosed()==false)
 				{
 					String[] args = view.getArgs();

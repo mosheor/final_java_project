@@ -279,9 +279,9 @@ public class MyModel extends CommonModel implements Model
 	@Override
 	public int getNumOfStepToGoal(String name)
 	{
+		System.out.println("hint start pos = "+maze3dMap.get(name).getStartPosition().toString());
 		outToServer.println("hint "+name+" "+properties.getAlgorithmSearchName()+
 				" changeStartPos "+maze3dMap.get(name).getStartPosition().toString());
-		outToServer.flush();
 		outToServer.flush();
 		int numOfSteps;
 		

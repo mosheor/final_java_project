@@ -637,12 +637,19 @@ public class MainWindow extends BasicWindow implements View{
 								t3.getText().equals("")==false && t4.getText().equals("")==false && combo1.getText().equals("")==false)
 						{
 							String temp = "";
-							if(isInt(t2.getText())==false && Integer.parseInt(t2.getText())<=1)
-								temp = "Wrong X parameter\n";
-							if(isInt(t3.getText())==false && Integer.parseInt(t3.getText())<=1)
+							if(isInt(t2.getText())==false)
+								temp += "Wrong X parameter\n";
+							else if(Integer.parseInt(t2.getText())<=1)
+								temp += "Wrong X parameter\n";
+							if(isInt(t3.getText())==false)
 								temp += "Wrong Y parameter\n";
-							if(isInt(t4.getText())==false && Integer.parseInt(t4.getText())<=1)
+							else if (Integer.parseInt(t3.getText())<=1)
+								temp += "Wrong Y parameter\n";
+							if(isInt(t4.getText())==false)
 								temp += "Wrong Z parameter\n";
+							else if (Integer.parseInt(t4.getText())<=1)
+								temp += "Wrong Z parameter\n";
+							
 							if(temp.equals(""))
 							{
 								String s = "generate 3d maze "+t1.getText()+" "+t2.getText()+" "+t3.getText()+" "+t4.getText()+" "+combo1.getText();

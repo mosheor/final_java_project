@@ -1,6 +1,8 @@
 package View;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -75,6 +77,23 @@ public class ServerView extends BasicWindow{
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
+		});
+		
+		list.addListener(SWT.MouseDoubleClick, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				String str = list.getItem(list.getFocusIndex());
+				int port = Integer.parseInt(str.split(" ")[5]);
+				String hostAddr = str.split(" ")[1];
+				if(str.contains("disconnected") == false)
+				{
+					MessageBox messageBox = new MessageBox(shell,SWT.ICON_QUESTION| SWT.YES | SWT.NO);
+					messageBox.setMessage("Do you really want to disconnect this client?");
+					if(arg0.doit = messageBox.open () == SWT.YES)
+						notifyString("disconnect "+port+" "+hostAddr);
+				}
+			}
 		});
 		
 		shell.addListener(SWT.Close, new Listener() {

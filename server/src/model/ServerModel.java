@@ -34,6 +34,11 @@ public class ServerModel extends Observable implements Observer{
 		}
 	}
 	
+	public void disconnectClient(int port,String hostAddr)
+	{
+		server.removeClientFromSockets(port,hostAddr);
+	}
+	
 	public void notifyString(String str)
 	{
 		setChanged();
@@ -46,7 +51,6 @@ public class ServerModel extends Observable implements Observer{
 		{
 			if(arg!=null && arg.getClass().getName().equals("java.lang.String")==true)
 			{
-				System.out.println("ServerModel update = "+(String)arg);
 				notifyString((String)arg);
 			}
 		}

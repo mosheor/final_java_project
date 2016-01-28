@@ -69,6 +69,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 			String line;
 			Object o = null;
 			while(!(line=in.readLine()).equals("exit")){
+				System.out.println("line = "+line);
 				String[] args = line.split(" ");
 				
 				switch(args[0]){
@@ -131,7 +132,6 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 					
 				case "solve":
 					String solve = solveMaze(args, maze3dMap.get(args[1]));
-					System.out.println("solve = "+solve);
 					out.println(solve);
 					out.flush();
 					break;
@@ -148,12 +148,12 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 					break;
 					
 				case "hint":
-					o = getNumOfStepToGoal(args[1], args[2]);
+					System.out.println("1 = "+args[1]+",2 = "+args[2]);
+					o = getNumOfStepToGoal(args[1], args[2],args[4]);
 					out.write((int)o);
 					out.flush();
 					break;
 				case "getMaze":
-					System.out.println(args[1]);
 					byte[] byteArrMaze = (getMaze3d(args[1])).toByteArray();
 					if(byteArrMaze==null)
 						out.println(args[1]+" is not exist");
@@ -171,11 +171,12 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 					break;
 				}
 			}
+			System.out.println("line1 = "+line);
 			exit();
 			in.close();
 			out.close();
 		}catch(IOException e){
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -259,13 +260,12 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		return maze3dMap.get(name);
 	}
 	public String solveMaze(String[] args, Maze3d maze) {
-		System.out.println("pos = "+args[args.length-1]);
 		String[] str = args[args.length-1].split(",");
 		str[0] = str[0].substring(1, str[0].length());
 		str[2] = str[2].substring(0, str[2].length()-1);
 		Position p = new Position(Integer.parseInt(str[0]), Integer.parseInt(str[1]), Integer.parseInt(str[2]));
 		if(mazeSolMap.containsKey(maze)==true && maze.getStartPosition().equals(p)==true)
-			{System.out.println("sol is exist in map");return ("Solution for maze "+args[1]+" is alredy exists");}
+			return ("Solution for maze "+args[1]+" is alredy exists");
 		else
 		{
 			solveMazeOb = new SolveMaze();
@@ -274,7 +274,6 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 			if(args[args.length-2].equals("changeStartPos")==true)
 			{
 				start = new Position(maze.getStartPosition().getpX(), maze.getStartPosition().getpY(), maze.getStartPosition().getpZ());
-				System.out.println("reg start = "+start.toString()+"\nnew start = "+p.toString());
 				maze.setStartPosition(p);
 			}
 			String str1 = "";
@@ -284,8 +283,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 			Future<Solution<Position>> future = threadpool.submit(solveMazeOb.solve(str1.split(" "), maze));
 			
 			if(args[3].equals("startPos")==true)
-				{System.out.println("reg start = "+start.toString()+"\nnew start = "+
-						maze.getStartPosition().toString());maze.setStartPosition(start);}
+				maze.setStartPosition(start);
 			
 			try {
 				setMazeSol(future.get(), maze);
@@ -325,21 +323,17 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		ObjectOutputStream obj = null;
 		try {
 			obj = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("mazeMap.zip")));
-			System.out.println("exit hand");
 			obj.writeObject(maze3dMap);
 			obj.flush();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println(e.getMessage());
 		} finally {
 			try {
 				obj.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println(e.getMessage());
 			}
 		}		
 	}
@@ -369,7 +363,6 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 	public Object getNamesMaze3d()
 	{
 		HashMap<String, Maze3d> temp = this.maze3dMap;
-		//System.out.println(maze3dMap.toString());
 		String s=temp.toString();
 		String[] t = s.split(", ");
 		String[] k=null;
@@ -392,12 +385,11 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		}
 		return t;
 	}
-	public Object getNumOfStepToGoal(String name,String getAlgorithmSearchName)
+	public Object getNumOfStepToGoal(String name,String getAlgorithmSearchName,String startPos)
 	{
 		if(maze3dMap.containsKey(name)==true)
 		{
-			solveMaze(("solve "+name+" "+getAlgorithmSearchName+" changeStartPos "+
-					maze3dMap.get(name).getStartPosition().toString()).split(" "),maze3dMap.get(name));
+			solveMaze(("solve "+name+" "+getAlgorithmSearchName+" changeStartPos "+startPos).split(" "),maze3dMap.get(name));
 			return solutionMap.get(name).getSol().size();
 		}
 		else
@@ -410,8 +402,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		try {
 			while(!(threadpool.awaitTermination(10, TimeUnit.SECONDS)));
 		} catch (InterruptedException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
-		System.out.println("Exit client");
 	}
 }

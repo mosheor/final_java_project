@@ -90,17 +90,24 @@ public class Presenter implements Observer{
 			}
 		});
 		
-		commandsMap.put("GetConnectedClients", new Command() {
+		commandsMap.put("GetNumberOfClients", new Command() {
 			
 			@Override
 			public void doCommand(String[] args) {
 			}
 		});
 		
-		commandsMap.put("GetNumberOfClients", new Command() {
+		commandsMap.put("disconnect", new Command() {
 			
 			@Override
 			public void doCommand(String[] args) {
+				int i=0;
+				for (String string : args) {
+					System.out.println((i)+" = "+string);
+					i++;
+				}
+				
+				model.disconnectClient(Integer.parseInt(args[1]),args[2]);
 			}
 		});
 	}
