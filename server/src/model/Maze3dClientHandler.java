@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -44,6 +45,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 	private HashMap<String,Solution<Position>> solutionMap;
 	private HashMap<Maze3d, Solution<Position>> mazeSolMap;
 	private ExecutorService threadpool;
+	boolean run = true;
 	
 	/**
 	 * C'tor
@@ -68,7 +70,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 			PrintWriter out = new PrintWriter(outToClient);
 			String line;
 			Object o = null;
-			while(!(line=in.readLine()).equals("exit")){
+			while(!(line=in.readLine()).equals("exit") && run==true){
 				System.out.println("line = "+line);
 				String[] args = line.split(" ");
 				
@@ -171,7 +173,6 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 					break;
 				}
 			}
-			System.out.println("line1 = "+line);
 			exit();
 			in.close();
 			out.close();

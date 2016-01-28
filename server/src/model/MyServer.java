@@ -155,20 +155,20 @@ public class MyServer extends Observable{
 	
 	public void removeClientFromSockets(Integer port,String hostAddr)
 	{
-		/*Socket s =clientSockets.get(port);
+		Socket s =clientSockets.get(port);
 		clientSockets.remove(port);
 		System.out.println("port = "+port+","+s.getPort());
 		System.out.println("addr = "+hostAddr+","+s.getInetAddress().getHostAddress().toString());
 		try {
-			PrintWriter pw = new PrintWriter(s.getOutputStream());
-			pw.println("exit");
-			pw.flush();
+			/*PrintWriter p = new PrintWriter(s.getOutputStream());
+			p.println("exit");
+			p.flush();*/
 			s.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("clientSokets contain "+port+" = "+clientSockets.containsKey(port));
-		notifyString(""+hostAddr+":"+port+" has disconnected");*/
+		notifyString(""+hostAddr+":"+port+" has disconnected");
 	}
 }
 
