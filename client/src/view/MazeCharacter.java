@@ -95,6 +95,8 @@ public class MazeCharacter<T> {
 
 	/**
 	 * Check if the current character equals with his position in the maze
+	 * @param MazeCharacter<T> obj
+	 * @return boolean
 	 */
 	public boolean equals(MazeCharacter<T> obj){
 		return this.getCharacter().equals(obj.getCharacter());
@@ -102,6 +104,7 @@ public class MazeCharacter<T> {
 
 	/**
 	 * Override the toString from Object
+	 * @return String
 	 */
 	@Override
 	public String toString() {

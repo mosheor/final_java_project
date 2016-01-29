@@ -37,8 +37,6 @@ public class MyModel extends CommonModel implements Model
 	private int index;
 	private Properties properties;
 
-
-	
 	/**
 	 * Constructor - initialize controller
 	 * @param HashMap<String, Command> commands map
@@ -129,7 +127,7 @@ public class MyModel extends CommonModel implements Model
 	}
 	
 	/**
-	 * Creates two-dimensional array that contains the  requested section
+	 * Creates two-dimensional array that contains the requested section
 	 * @param Maze3d maze
 	 * @param String maze name
 	 * @param int number section
@@ -225,6 +223,7 @@ public class MyModel extends CommonModel implements Model
 		}
 		try {
 			if (serverSock.isClosed()==false) {
+				
 				serverSock.close();
 			notifyString("Exit");
 			}
@@ -247,18 +246,15 @@ public class MyModel extends CommonModel implements Model
 	 * Get all the existing mazes names
 	 * @return String[]
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public String[] getNamesMaze3d()
 	{
 		outToServer.println("mazeName");
 		outToServer.flush();
 		String[] str = null;
-		String line;
 		
 		try {
 			int size = inFromServer.read();
-			System.out.println(size);
 			str = new String[size];
 			for (int i = 0; i < str.length; i++) {
 				str[i] = (String)inFromServer.readLine();
@@ -278,7 +274,6 @@ public class MyModel extends CommonModel implements Model
 	@Override
 	public int getNumOfStepToGoal(String name)
 	{
-		System.out.println("hint start pos = "+maze3dMap.get(name).getStartPosition().toString());
 		outToServer.println("hint "+name+" "+properties.getAlgorithmSearchName()+
 				" changeStartPos "+maze3dMap.get(name).getStartPosition().toString());
 		outToServer.flush();
@@ -422,7 +417,6 @@ public class MyModel extends CommonModel implements Model
 		try {
 			outFile = new MyCompressorOutputStream(new FileOutputStream(fileName));
 			outFile.write(maze.toByteArray());
-			System.out.println(fileName);
 			mazeInFile.put(fileName, maze);
 			outFile.close();
 			notifyString("file "+fileName+" is ready");

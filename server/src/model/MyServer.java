@@ -1,13 +1,9 @@
 package model;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -77,7 +73,7 @@ public class MyServer extends Observable{
 										clientSockets.put(someClient.getPort(), someClient);
 										clinetHandler.handleClient(someClient.getInputStream(), someClient.getOutputStream());
 										clientSockets.remove(someClient.getPort());
-										System.out.println("close sock start");
+										//System.out.println("close sock start");
 										someClient.close();
 										System.out.println("\tdone handling client "+clientsHandled);
 										notifyString(removeClient(someClient));
@@ -104,20 +100,33 @@ public class MyServer extends Observable{
 		
 	}
 	
+	/**
+	 * notifyObservers(str)
+	 * @param String str
+	 */
 	public void notifyString(String str)
 	{
-		//System.out.println("MyServer notify = "+str);
 		setChanged();
 		notifyObservers(str);
 	}
 	
+	/**
+	 * Adds a client Socket to the clients hashMap
+	 * @param Socket client
+	 * @return String
+	 */
 	public String addClient(Socket client){
 		clients.put(client.getPort(), client.getLocalAddress().getHostAddress());
 		System.out.println("add client: port = "+port+" , host = "+client.getLocalAddress().getHostAddress());
-		System.out.println("client succed = "+clients.containsKey(client.getPort()));
+		//System.out.println("client succed = "+clients.containsKey(client.getPort()));
 		return ""+client.getLocalAddress().getHostAddress()+":"+client.getPort()+" has connected";
 	}
 	
+	/**
+	 * Remove a client from the clients hashMap
+	 * @param Socket client
+	 * @return String
+	 */
 	public String removeClient(Socket client){
 		String hostAddr = null;
 		if((hostAddr=clients.remove(client.getPort()))==null)
@@ -130,6 +139,7 @@ public class MyServer extends Observable{
 	 * Close the server
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unused")
 	public void close() throws Exception{
 		if(stop==false)
 		{
@@ -154,22 +164,27 @@ public class MyServer extends Observable{
 		}
 	}
 	
+	/**
+	 * Close the  client's socket
+	 * @param int port
+	 * @param String hostAddr
+	 */
 	public void removeClientFromSockets(Integer port,String hostAddr)
 	{
 		Socket socket =clientSockets.get(port);
 		clientSockets.remove(port);
-		System.out.println("port = "+port+","+socket.getPort());
-		System.out.println("addr = "+hostAddr+","+socket.getInetAddress().getHostAddress().toString());
+		// System.out.println("port = "+port+","+socket.getPort());
+		// System.out.println("addr = "+hostAddr+","+socket.getInetAddress().getHostAddress().toString());
 		try {
 			if(socket!=null)
 			{
 				socket.close();
-				System.out.println("close sock");
+				// System.out.println("close sock");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//notifyString(""+hostAddr+":"+port+" has disconnected");
+		// notifyString(""+hostAddr+":"+port+" has disconnected");
 	}
 }
 

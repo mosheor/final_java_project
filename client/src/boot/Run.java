@@ -19,9 +19,9 @@ import presenter.Properties;
 import view.CLI;
 import view.MyView;
 
-/*
+
 import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
+/*import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

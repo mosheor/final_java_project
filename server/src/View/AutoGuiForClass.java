@@ -1,11 +1,17 @@
 package View;
 
+import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -18,6 +24,14 @@ import org.eclipse.swt.widgets.Text;
 
 import Presenter.Properties;
 
+/**
+ * <h1>  class AutoGuiForClass <h1>
+ * This class creates a generic GUI window for any class
+ * 
+ * @author  Ben Mazliach & Or Moshe
+ * @version 1.0
+ * @since   28/01/16
+ */
 public class AutoGuiForClass extends BasicWindow{
 
 	private boolean changeSucceeded = false;
@@ -26,7 +40,13 @@ public class AutoGuiForClass extends BasicWindow{
 	Class classType;
 	boolean success = false;
 	
-	
+	/**
+	 * Default c'tor
+	 * @param title
+	 * @param classType
+	 * @param x
+	 * @param y
+	 */
 	@SuppressWarnings("rawtypes")
 	public AutoGuiForClass(String title, Class classType ,int x,int y) {
 		super(title, x, y);
@@ -37,35 +57,51 @@ public class AutoGuiForClass extends BasicWindow{
 		Properties p = new Properties();
 		AutoGuiForClass gui= new AutoGuiForClass("maze example", p.getClass(),300,400);
 		gui.run();
-		//p = (Properties)gui.getNewCreatedClass();
-		//System.out.println(p.getNumOfClients());
-		//System.out.println(p.getPort());
+		p = (Properties)gui.getNewCreatedClass();
+		
+		try {
+			FileOutputStream file = new FileOutputStream("properties.xml");
+			BufferedOutputStream bos = new BufferedOutputStream(file);
+			XMLEncoder s = new XMLEncoder(bos);
+			s.writeObject(p);
+			s.flush();
+			s.close();
+			file.close();
+			bos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
 	}
 
+	/**
+	 * Override the initWidgent from BasicWindow to insert the widgets for the GUI
+	 */
 	@Override
 	void initWidgets() {
-		shell.setLayout(new GridLayout(3,false));
-		
-		Label titel = new Label(shell,SWT.LEFT);		
-		titel.setText(classType.getSimpleName()+":");
-		titel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 3, 1));
-		
+		shell.setLayout(new GridLayout(2,false));
+		shell.setBackground(new Color(display, 100, 200, 225));
+
+		Label title = new Label(shell,SWT.LEFT);		
+		title.setText(classType.getSimpleName()+":");
+		title.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 2, 1));
+		title.setBackground(new Color(display, 100, 200, 225));
+
 		Field[] fields= classType.getDeclaredFields();
 		HashMap<String,Text> values = new HashMap<String, Text>();
 		
 		for(Field f : fields){
 			
-			Label lable = new Label(shell, SWT.READ_ONLY);
-			lable.setText(f.getName());
-			lable.setLayoutData(new GridData(SWT.FILL ,SWT.TOP ,false ,false ,1 ,1));
+			Label label = new Label(shell, SWT.READ_ONLY);
+			label.setText(f.getName());
+			label.setLayoutData(new GridData(SWT.FILL ,SWT.TOP ,false ,false ,1 ,1));
+			label.setBackground(new Color(display, 100, 200, 225));
 			
 			values.put(f.getName(), new Text(shell, SWT.BORDER));
 			values.get(f.getName()).setText("");
 			values.get(f.getName()).setLayoutData(new GridData(SWT.FILL ,SWT.TOP ,false ,false ,1 ,1));
-			
-			Label lable1 = new Label(shell, SWT.READ_ONLY);
-			lable1.setText(f.getName().getClass().toString());
-			lable1.setLayoutData(new GridData(SWT.FILL ,SWT.TOP ,false ,false ,1 ,1));
 		}
 		            
 		Button saveButton = new Button(shell, SWT.PUSH);
@@ -122,7 +158,6 @@ public class AutoGuiForClass extends BasicWindow{
 			
 	}
 	
-	
 	/**
 	 * @return success - if the create succeeded
 	 */
@@ -137,16 +172,18 @@ public class AutoGuiForClass extends BasicWindow{
 		return newCreatedClass;
 	}
 
-
+	/**
+	 * Return true if the creation of the class succeeded
+	 * @return boolean
+	 */
 	public boolean isChangeSucceeded() {
 		return changeSucceeded;
 	}
 
-
-	public void setChangeSucceeded(boolean changeSucceeded) {
-		this.changeSucceeded = changeSucceeded;
-	}
-	
+	/**
+	 * Display error MessageBox
+	 * @param eror
+	 */
 	private void setEror(String eror){
 		Display.getCurrent().syncExec(new Runnable() {
 			
@@ -159,7 +196,4 @@ public class AutoGuiForClass extends BasicWindow{
 			}
 		});
 	}
-	
-
-	
 }

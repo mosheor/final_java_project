@@ -2,8 +2,6 @@ package Presenter;
 
 import java.io.Serializable;
 
-import model.ClinetHandler;
-
 /**
  * <h1>  Properties Interface <h1>
  * This class defines the game's properties

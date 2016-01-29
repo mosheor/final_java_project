@@ -38,8 +38,6 @@ import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import algorithms.search.State;
-import model.MyModel;
-import presenter.MyPresenter;
 import presenter.Properties;
 
 /**
@@ -625,6 +623,7 @@ public class MainWindow extends BasicWindow implements View{
 				String[] items = "MyMaze3dGenerator SimpleMaze3dGenerator".split(" ");
 				Combo combo1 = new Combo(generateShell, SWT.DROP_DOWN);
 				combo1.setItems(items);
+				combo1.select(0);
 
 				
 				Button createMazeButton = new Button(generateShell, SWT.PUSH);
@@ -766,7 +765,7 @@ public class MainWindow extends BasicWindow implements View{
 					setCommand(("solve "+nameCurrentMaze+" "+solveAlg).split(" "));
 					maze.setStartPosition(temp);
 					setCommand(("display solution "+nameCurrentMaze).split(" "));
-					System.out.println("sol is ok");
+					//System.out.println("sol is ok");
 					solving = true;
 					timer=new Timer();
 					task=new TimerTask() {
@@ -997,6 +996,7 @@ public class MainWindow extends BasicWindow implements View{
 	
 	/**
 	 * Open Messagebox
+	 * @param String s
 	 */
 	@Override
 	public void displayString(String s) {
@@ -1012,7 +1012,7 @@ public class MainWindow extends BasicWindow implements View{
 				
 				@Override
 				public void run() {
-					System.out.println(s);
+					//System.out.println(s);
 					if(s.equals("The server is closed")==false && s.equals("Exit because the server is null")==false && s.equals("Exit")==false && s.contains("solution")==false && s.contains("Solution")==false)
 					{
 						MessageBox messageBox = new MessageBox(shell, SWT.ICON_INFORMATION| SWT.YES);
@@ -1028,6 +1028,8 @@ public class MainWindow extends BasicWindow implements View{
 	
 	/**
 	 * Print the solution
+	 * @param Solution<Position> sol
+	 * @param String name
 	 */
 	@Override
 	public void displaySolution(Solution<Position> sol, String name) {
@@ -1060,6 +1062,8 @@ public class MainWindow extends BasicWindow implements View{
 
 	/**
 	 * Display the maze
+	 * @param Maze3d maze
+	 * @param String name
 	 */
 	@Override
 	public void displayMaze3d(Maze3d maze, String name) {
@@ -1074,6 +1078,7 @@ public class MainWindow extends BasicWindow implements View{
 	
 	/**
 	 * NotifyObservers
+	 * @param String[] args
 	 */
 	@Override
 	public void setCommand(String[] args) {
@@ -1084,6 +1089,7 @@ public class MainWindow extends BasicWindow implements View{
 
 	/**
 	 * Set the args
+	 * @param String[] args
 	 */
 	@Override
 	public void setArgs(String[] args) {
@@ -1092,6 +1098,7 @@ public class MainWindow extends BasicWindow implements View{
 
 	/**
 	 * Get the args
+	 * @return String[] args
 	 */
 	@Override
 	public String[] getArgs() {

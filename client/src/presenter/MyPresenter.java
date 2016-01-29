@@ -11,8 +11,8 @@ import model.Model;
 import view.View;
 
 /**
- * <h1>  Presenter c <h1>
- * This class manages all the program between the model and view
+ * <h1> class MyPresenter <h1>
+ * This class manages all the program between the model and the view
  * 
  * @author  Ben Mazliach & Or Moshe
  * @version 1.0
@@ -37,18 +37,17 @@ public class MyPresenter implements Presenter,Observer{
 	}
 	
 	/**
-	 * Comes here after notify event
+	 * Override the update of Observer, After notify event
 	 * @param Observable o
 	 * @param Object arg
 	 */
+	@SuppressWarnings("null")
 	@Override
 	public void update(Observable o, Object arg) {
 		if(o==view)
 		{
 			if(arg==null && model.getServerSock()!=null)
 			{
-				System.out.println("close = "+model.getServerSock().isClosed());
-				System.out.println("connect = "+model.getServerSock().isConnected());
 				if(model.getServerSock().isClosed()==false)
 				{
 					String[] args = view.getArgs();
@@ -101,7 +100,7 @@ public class MyPresenter implements Presenter,Observer{
 	}
 	
 	/**
-	 * Method that defines all the commands and puts them in commands hash map
+	 * put all the commands in the commands hash map
 	 */
 	public void putCommandsMap()
 	{

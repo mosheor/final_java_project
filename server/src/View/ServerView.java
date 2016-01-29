@@ -1,8 +1,6 @@
 package View;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -17,20 +15,38 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 
+/**
+ * <h1>  class ServerView <h1>
+ * This class 
+ * 
+ * @author  Ben Mazliach & Or Moshe
+ * @version 1.0
+ * @since   28/1/16
+ */
 public class ServerView extends BasicWindow implements View{
 	
 	List list;
 	
+	/**
+	 * C'tor
+	 * @param String title
+	 * @param int x
+	 * @param int y
+	 */
 	public ServerView(String title, int x, int y) {
 		super(title, x, y);
 	}
 
+	/**
+	 * Initialize all the widgets in the window
+	 */
 	@Override
 	void initWidgets() {
 		
 		shell.setLayout(new GridLayout(2, true));
 		shell.setBackground(new Color(display, 100, 200, 225));
 		shell.setImage(new Image(display, "resources/serverLogo.png"));
+		
 		Button startButton = new  Button(shell, SWT.PUSH);
 		startButton.setText("Start");
 		startButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
@@ -108,30 +124,44 @@ public class ServerView extends BasicWindow implements View{
 	}
 
 	/**
-	 * Runnable's start
+	 * start the server
 	 */
 	public void start() {
 		run();
 	}
 	
+	/**
+	 * notifyObservers(str)
+	 * @param String str
+	 */
 	public void notifyString(String str)
 	{
 		setChanged();
 		notifyObservers(str);
 	}
 
+	/**
+	 * Open a messagebox
+	 * @param String str
+	 */
 	public void displayString(String str)
 	{
-		System.out.println(str);
+		MessageBox mb = new MessageBox(shell,SWT.OK);
+		mb.setMessage(str);
+		mb.open();
 	}
 	
+	/**
+	 * Display the client status in the list
+	 * @param string str
+	 */
 	public void displayClient(String str)
 	{
 		String[] args = str.split(":");
 		
 		int port = Integer.parseInt(args[1].split(" ")[0]);
 		String hostname = args[0];
-		System.out.println("str = "+str);
+		//System.out.println("str = "+str);
 		
 		display.asyncExec(new Runnable() {
 			
@@ -140,7 +170,6 @@ public class ServerView extends BasicWindow implements View{
 				if(args[1].contains("has connected"))
 				{
 					list.add("client: " + hostname + " connected from port: " + port);
-					System.out.println("add cli");
 					list.redraw();
 				}
 				else

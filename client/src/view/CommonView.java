@@ -4,6 +4,7 @@ import java.util.Observable;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
+
 /**
  * <h1>  MyView class <h1>
  * This class define methods for each view system
@@ -47,14 +48,12 @@ public abstract class CommonView extends Observable implements View {
 		notifyObservers();
 	}
 	
-	
 	/**
 	 * Display the maze solution
 	 * @param Solution<Position> sol
 	 * @param String name
 	 */
 	public abstract void displaySolution(Solution<Position> sol,String name);
-	
 	
 	/**
 	 * Set the args

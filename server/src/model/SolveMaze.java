@@ -16,21 +16,35 @@ import algorithms.search.Solution;
 import algorithms.search.State;
 import comperators.StateCostComparator;
 
+/**
+ * <h1> class SolveMaze <h1>
+ * This class Solves mazes for the server
+ * 
+ * @author  Ben Mazliach & Or Moshe
+ * @version 1.0
+ * @since   24/01/16
+ */
 public class SolveMaze extends Observable {
 	
+	/**
+	 * The solve function
+	 * @param args
+	 * @param maze
+	 * @return
+	 */
 	public Callable<Solution<Position>>  solve(String[] args, Maze3d maze)
 	{
+		System.out.println("start = "+maze.getStartPosition());
 		Callable<Solution<Position>> call = new Callable<Solution<Position>>() {
 			@Override
 			public Solution<Position> call() {
-				int i=0;
-				for (String string : args) {
-					System.out.println(i+" = "+string);
-					i++;
-				}
 				Searchable<Position> s = new Maze3dDomain(maze);
 				BFS<Position> solve = null;
 				Solution<Position> sol = null;
+				System.out.println("solve args");
+				for (String string : args) {
+					System.out.println(string);
+				}
 				if(args.length>=3 && args.length<5)
 				{
 					if(args[2].equals("BFS")==true)
@@ -68,6 +82,10 @@ public class SolveMaze extends Observable {
 		return call;
 	}
 
+	/**
+	 * notifyObservers(str)
+	 * @param String str
+	 */
 	private void notifyS(String str)
 	{
 		this.setChanged();

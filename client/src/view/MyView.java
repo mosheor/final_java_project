@@ -10,6 +10,7 @@ import algorithms.search.State;
 /**
  * <h1>  MyView class <h1>
  * This class implements View and manages the view for the client
+ * Uses CLI
  * 
  * @author  Ben Mazliach & Or Moshe
  * @version 1.0
@@ -144,9 +145,6 @@ public class MyView extends CommonView{
 	@Override
 	public void setMazes(String[] mazes) {
 		this.mazes = mazes;
-		for (String string : mazes) {
-			System.out.println(string);
-		}
 	}
 }
 

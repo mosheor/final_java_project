@@ -175,7 +175,7 @@ public class Maze2D<T> extends MazeDisplayer<Position>{
 	
 	/**
 	 * Get all the possible moves in his current position
-	 * @param Strung str
+	 * @param String section
 	 * @return String[]
 	 */
 	@Override

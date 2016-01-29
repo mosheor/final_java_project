@@ -1,6 +1,7 @@
-package View;
+package boot;
 import Presenter.MyPresenter;
 import Presenter.Properties;
+import View.ServerView;
 import model.Maze3dClientHandler;
 import model.ServerModel;
 

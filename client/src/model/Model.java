@@ -176,6 +176,10 @@ public interface Model {
 	 */
 	public Properties getProperties();	
 	
+	/**
+	 * Get the server socket
+	 * @return Socket
+	 */
 	public Socket getServerSock();
 }
 

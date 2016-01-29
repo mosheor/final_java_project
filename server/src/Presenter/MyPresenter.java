@@ -6,12 +6,25 @@ import java.util.Observer;
 import View.View;
 import model.Model;
 
+/**
+ * <h1> class MyPresenter <h1>
+ * This class manages all the program between the model and the view
+ * 
+ * @author  Ben Mazliach & Or Moshe
+ * @version 1.0
+ * @since   18/1/16
+ */
 public class MyPresenter implements Observer{
 
 	Model model;
 	View view;
 	HashMap<String, Command> commandsMap;
 	
+	/**
+	 * C'tor
+	 * @param Model model
+	 * @param View view
+	 */
 	public MyPresenter(Model model,View view) {
 		this.view = view;
 		this.model = model;
@@ -19,6 +32,11 @@ public class MyPresenter implements Observer{
 		putCommandsMap();
 	}
 	
+	/**
+	 * Override the update of Observer, After notify event
+	 * @param Observable o
+	 * @param Object arg
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		if(o==view)
@@ -71,6 +89,9 @@ public class MyPresenter implements Observer{
 		}
 	}
 	
+	/**
+	 * put all the presenter commands in the commands hashMap
+	 */
 	public void putCommandsMap()
 	{
 		commandsMap.put("StartServer", new Command() {
