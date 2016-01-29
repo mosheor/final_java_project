@@ -65,6 +65,8 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 	@Override
 	public void handleClient(InputStream inFromClient, OutputStream outToClient) {
 		try{
+
+			threadpool = Executors.newFixedThreadPool(10);
 			BufferedReader in=new BufferedReader(new InputStreamReader(inFromClient));
 			PrintWriter out = new PrintWriter(outToClient);
 			String line;
@@ -306,7 +308,6 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 		str[0] = str[0].substring(1, str[0].length());
 		str[2] = str[2].substring(0, str[2].length()-1);
 		Position p = new Position(Integer.parseInt(str[0]), Integer.parseInt(str[1]), Integer.parseInt(str[2]));
-		System.out.println("start = "+maze.getStartPosition().toString()+",p = "+p);
 		/*if(mazeSolMap.containsKey(maze)==true && maze.getStartPosition().equals(p)==true)
 			return ("Solution for maze "+args[1]+" is alredy exists");
 		else*/
@@ -321,7 +322,6 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 			{
 				start = new Position(maze.getStartPosition().getpX(), maze.getStartPosition().getpY(), maze.getStartPosition().getpZ());
 				maze.setStartPosition(p);
-				System.out.println("p = "+p.toString()+",start = "+maze.getStartPosition());
 			}
 			String str1 = "";
 			for(int i=0;i<args.length-2;i++) {
@@ -480,6 +480,7 @@ public class Maze3dClientHandler implements ClinetHandler,Observer{
 	public void exit() {
 		//Zip save
 		saveMaze3dMapZip();
+		threadpool.shutdownNow();
 		try {
 			while(!(threadpool.awaitTermination(10, TimeUnit.SECONDS)));
 		} catch (InterruptedException e) {
